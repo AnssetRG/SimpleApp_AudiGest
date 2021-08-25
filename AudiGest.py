@@ -5,6 +5,7 @@ from PyQt5.QtGui import QCursor
 import sys
 import librosa
 import os
+from CargaArchivosAplicacion import ProcesoCargaArchivo
 
 parameters = {
     "audio": [],
@@ -45,6 +46,19 @@ class AudioGrid(QVBoxLayout):
             "*:hover{background: 'gray';}"
         )
 
+        procesar_btn = QPushButton("Procesar") #
+        procesar_btn.setCursor(QCursor(QtCore.Qt.PointingHandCursor)) #
+        procesar_btn.setFixedWidth(250) #
+        procesar_btn.setStyleSheet(
+            "*{margin-right: 20px; "+
+            "border: 4px solid 'black';"+
+            "border-radius: 10px;" +
+            "font-size: 24px;"+
+            "color: 'black';"+
+            "padding: 15px 0}" +
+            "*:hover{background: 'gray';}"
+        )
+
         audio_file_label = QLabel("Nombre del Archivo de Audio")
         audio_file_label.setAlignment(QtCore.Qt.AlignRight)
         audio_file_label.setStyleSheet(
@@ -59,9 +73,11 @@ class AudioGrid(QVBoxLayout):
         widgets["audio_file"].append(audio_file_label)
 
         audio_btn.clicked.connect(self.set_new_file)
+        procesar_btn.clicked.connect(self.set_new_file) 
 
         title.addWidget(audio_label)
         section.addWidget(audio_btn)
+        section.addWidget(procesar_btn) #
         section.addWidget(audio_file_label)
 
         self.addLayout(title)
@@ -87,7 +103,8 @@ class AudioGrid(QVBoxLayout):
                 self.alert_window()
                 resultado = parameters["audio"][-1] 
         parameters["audio"].append(resultado)
-        widgets["audio_file"][-1].setText(parameters["audio"][-1])
+        widgets["audio_file"][-1].setText(parameters["audio"][-1])        
+
     
     def alert_window(self):
         msg = QMessageBox()
@@ -107,7 +124,7 @@ class MainWindow(QMainWindow):
         self.centralwidget.setLayout(self.layout)
 
     def closeEvent(self, event):
-        reply = QMessageBox.question(self, 'Confirmar Cerrar Ventana', '¿Está seguro que quiere salir de la apliación?',QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        reply = QMessageBox.question(self, 'Confirmar Cerrar Ventana', '¿Está seguro que quiere salir de la aplicación?',QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
             event.accept()
