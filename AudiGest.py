@@ -1,11 +1,12 @@
+from CargaArchivos import CargandoArchivos
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow,QLabel, QPushButton, QWidget, QGridLayout, QMessageBox, QFileDialog,QVBoxLayout,QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow,QLabel, QPushButton, QWidget, QGridLayout, QMessageBox, QFileDialog,QVBoxLayout,QHBoxLayout
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QCursor
 import sys
 import librosa
 import os
-from CargaArchivosAplicacion import ProcesoCargaArchivo
+from CargaArchivosAplicacion import ProcesoCargaArchivo, CargaArchivosAplicacion, correr_programa
 
 parameters = {
     "audio": [],
@@ -25,6 +26,7 @@ class AudioGrid(QVBoxLayout):
         title = QHBoxLayout()
         section = QHBoxLayout()
 
+        #texto 1
         audio_label = QLabel("1. Seleccione el Audio")
         audio_label.setAlignment(QtCore.Qt.AlignCenter)
         audio_label.setStyleSheet(
@@ -33,6 +35,7 @@ class AudioGrid(QVBoxLayout):
             "padding: 15px 0}"
         )
 
+        #botón cargar
         audio_btn = QPushButton("Cargar")
         audio_btn.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
         audio_btn.setFixedWidth(250)
@@ -46,6 +49,19 @@ class AudioGrid(QVBoxLayout):
             "*:hover{background: 'gray';}"
         )
 
+        #texto 2
+        audio_file_label = QLabel("Nombre del Archivo de Audio")
+        audio_file_label.setAlignment(QtCore.Qt.AlignLeft)
+        audio_file_label.setStyleSheet(
+            "*{margin-left: 20px; "+
+            "border: 2px solid 'black';"+
+            "border-radius: 5px;" +
+            "font-size: 24px;"
+            "padding: 15px 0;"+
+            "background: 'white'}"
+        )
+
+        #boton procesar
         procesar_btn = QPushButton("Procesar") #
         procesar_btn.setCursor(QCursor(QtCore.Qt.PointingHandCursor)) #
         procesar_btn.setFixedWidth(250) #
@@ -56,24 +72,13 @@ class AudioGrid(QVBoxLayout):
             "font-size: 24px;"+
             "color: 'black';"+
             "padding: 15px 0}" +
-            "*:hover{background: 'gray';}"
-        )
-
-        audio_file_label = QLabel("Nombre del Archivo de Audio")
-        audio_file_label.setAlignment(QtCore.Qt.AlignRight)
-        audio_file_label.setStyleSheet(
-            "*{margin-left: 20px; "+
-            "border: 2px solid 'black';"+
-            "border-radius: 5px;" +
-            "font-size: 24px;"
-            "padding: 15px 0;"+
-            "background: 'white'}"
+            "*:hover{background: 'gray';}" #
         )
 
         widgets["audio_file"].append(audio_file_label)
 
         audio_btn.clicked.connect(self.set_new_file)
-        procesar_btn.clicked.connect(self.set_new_file) 
+        procesar_btn.clicked.connect(correr_programa)
 
         title.addWidget(audio_label)
         section.addWidget(audio_btn)
