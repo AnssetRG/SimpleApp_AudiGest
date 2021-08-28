@@ -1,12 +1,12 @@
 import sys
 import librosa
 import os
+from os import environ
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QCursor, QPixmap
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow,QLabel, QPushButton, QWidget, QGridLayout, QMessageBox, QFileDialog,QVBoxLayout,QHBoxLayout,QGraphicsPixmapItem, QGraphicsScene
 from Dialogo import Dialogo
-from os import environ
 
 parameters = {
     "audio": [],
@@ -21,19 +21,31 @@ widgets = {
 class AudiGest_terminado(QDialog):
     def __init__(self):        
         super().__init__()
-        self.ui = AudiGest_terminado()
+        self.ui = Dialogo()
         self.ui.setupUi(self)
-
 
         #sección imagenes
         self.scene = QGraphicsScene(self)
+        self.scene2 = QGraphicsScene(self)
+        self.scene3 = QGraphicsScene(self)
         pixmap = QPixmap()
+        pixmap2 = QPixmap()
+        pixmap3 = QPixmap()
         pixmap.load('cara1.png')
+        pixmap2.load('cara2.png')
+        pixmap3.load('cara3.png')
         item = QGraphicsPixmapItem(pixmap)
+        item2 = QGraphicsPixmapItem(pixmap2)
+        item3 = QGraphicsPixmapItem(pixmap3)
         self.scene.addItem(item)
+        self.scene2.addItem(item2)
+        self.scene3.addItem(item3)
         self.ui.gpc_imagen1.setScene(self.scene)
+        self.ui.gpc_imagen2.setScene(self.scene2)
+        self.ui.gpc_imagen3.setScene(self.scene3)
 
         self.show()
+
 
 def suppress_qt_warnings():
     environ["QT_DEVICE_PIXEL_RATIO"] = "0"
