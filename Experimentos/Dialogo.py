@@ -108,7 +108,7 @@ class Dialogo(object):
 
     def retranslateUi(self, Dialogo):
         _translate = QtCore.QCoreApplication.translate
-        Dialogo.setWindowTitle(_translate("Dialogo", "Audigest"))
+        Dialogo.setWindowTitle(_translate("Dialogo", "Audigest v1.0"))
         self.btn_procesar.setText(_translate("Dialogo", "Procesar"))
         self.caja_texto1.setHtml(_translate("Dialogo", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"

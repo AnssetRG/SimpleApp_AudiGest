@@ -18,12 +18,14 @@ widgets = {
     "audio_file": []
 }
 
-class AudiGest_terminado(QDialog):
+class AudiGest_terminado(QDialog,QMainWindow):
     def __init__(self):        
         super().__init__()
         self.ui = Dialogo()
         self.ui.setupUi(self)
+        self.imagenes()
 
+    def imagenes(self):
         #sección imagenes
         self.scene = QGraphicsScene(self)
         self.scene2 = QGraphicsScene(self)
@@ -45,6 +47,14 @@ class AudiGest_terminado(QDialog):
         self.ui.gpc_imagen3.setScene(self.scene3)
 
         self.show()
+        
+    def closeEvent(self, event):
+        reply = QMessageBox.question(self, 'Confirmar Cerrar Ventana', '¿Está seguro que quiere salir de la aplicación?',QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore() 
 
 
 def suppress_qt_warnings():
@@ -54,12 +64,16 @@ def suppress_qt_warnings():
     environ["QT_SCALE_FACTOR"] = "1"
 
 
-if __name__ == '__main__':
+def main():
     suppress_qt_warnings()
+    
     app = QApplication(sys.argv)
     ventana = AudiGest_terminado()
     ventana.show()
     sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    main()
 
 
 
