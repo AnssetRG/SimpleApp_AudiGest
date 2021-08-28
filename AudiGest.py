@@ -62,9 +62,9 @@ class AudioGrid(QVBoxLayout):
         )
 
         #boton procesar
-        procesar_btn = QPushButton("Procesar") #
-        procesar_btn.setCursor(QCursor(QtCore.Qt.PointingHandCursor)) #
-        procesar_btn.setFixedWidth(250) #
+        procesar_btn = QPushButton("Procesar")
+        procesar_btn.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
+        procesar_btn.setFixedWidth(250)
         procesar_btn.setStyleSheet(
             "*{margin-right: 20px; "+
             "border: 4px solid 'black';"+
@@ -72,7 +72,7 @@ class AudioGrid(QVBoxLayout):
             "font-size: 24px;"+
             "color: 'black';"+
             "padding: 15px 0}" +
-            "*:hover{background: 'gray';}" #
+            "*:hover{background: 'gray';}"
         )
 
         widgets["audio_file"].append(audio_file_label)
@@ -82,7 +82,7 @@ class AudioGrid(QVBoxLayout):
 
         title.addWidget(audio_label)
         section.addWidget(audio_btn)
-        section.addWidget(procesar_btn) #
+        section.addWidget(procesar_btn)
         section.addWidget(audio_file_label)
 
         self.addLayout(title)
@@ -152,7 +152,14 @@ class MainWindow(QMainWindow):
         self.modelGrid = AudioGrid()
         self.centralwidget.setLayout(self.modelGrid)
 
+def suppress_qt_warnings(): #para evitar mensajes de error
+    os.environ["QT_DEVICE_PIXEL_RATIO"] = "0"
+    os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
+    os.environ["QT_SCREEN_SCALE_FACTORS"] = "1"
+    os.environ["QT_SCALE_FACTOR"] = "1"
+
 def main():
+    suppress_qt_warnings()
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()

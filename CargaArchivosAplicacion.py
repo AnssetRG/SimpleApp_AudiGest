@@ -30,7 +30,6 @@ class ProcesoCargaArchivo(threading.Thread):
             time.sleep(0.25)
             self.dialogo.ui.pbr_cargando_archivo.setValue(self.contador)
             self.contador += 10
-        
 
 def suppress_qt_warnings(): #para evitar mensajes de error
     environ["QT_DEVICE_PIXEL_RATIO"] = "0"
@@ -49,4 +48,4 @@ def correr_programa():
     sys.exit(app.exec_()) 
 
 if __name__ == '__main__':
-    suppress_qt_warnings()
+    correr_programa()    

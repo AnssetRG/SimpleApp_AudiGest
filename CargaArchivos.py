@@ -25,6 +25,7 @@ class CargandoArchivos(object):
         self.pbr_cargando_archivo.setGeometry(QtCore.QRect(50, 110, 311, 31))
         self.pbr_cargando_archivo.setProperty("value", 0)
         self.pbr_cargando_archivo.setObjectName("pbr_cargando_archivo")
+        
 
         self.retranslateUi(CargandoArchivos)
         QtCore.QMetaObject.connectSlotsByName(CargandoArchivos)
