@@ -7,6 +7,8 @@ from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QCursor, QPixmap
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow,QLabel, QPushButton, QWidget, QGridLayout, QMessageBox, QFileDialog,QVBoxLayout,QHBoxLayout,QGraphicsPixmapItem, QGraphicsScene
 from Dialogo import Dialogo
+from CargaArchivos import CargandoArchivos
+from CargaArchivosAplicacion import ProcesoCargaArchivo, CargaArchivosAplicacion, correr_programa
 
 parameters = {
     "audio": [],
@@ -24,8 +26,9 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.ui = Dialogo()
         self.ui.setupUi(self)
         self.imagenes()
+        #self.activar_boton_procesar()        
         self.ui.btn_cargar.clicked.connect(self.set_new_file)
-        
+        self.ui.btn_procesar.clicked.connect(correr_programa)
         
     def imagenes(self):        
         self.scene = QGraphicsScene(self)
@@ -77,9 +80,8 @@ class AudiGest_terminado(QDialog,QMainWindow):
                 self.alert_window()
                 resultado = parameters["audio"][-1] 
         parameters["audio"].append(resultado)
-        widgets["audio_file"][-1].setText(parameters["audio"][-1])        
+        widgets["audio_file"][-1].setText(parameters["audio"][-1])
 
-    
     def alert_window(self):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Critical)
@@ -88,9 +90,11 @@ class AudiGest_terminado(QDialog,QMainWindow):
         msg.setWindowTitle("Error de Carga de Audio")
         msg.exec_()
 
-    
-
-
+    def activar_boton_procesar(self):
+        if self.ui.radio_btn1.isChecked() == True or self.ui.radio_btn2.isChecked() == True or self.ui.radio_btn3.isChecked() == True:
+            self.ui.btn_procesar.setEnabled(True)
+        else: 
+            self.ui.btn_procesar.setEnabled(False)
 
 def suppress_qt_warnings():
     environ["QT_DEVICE_PIXEL_RATIO"] = "0"
@@ -98,10 +102,8 @@ def suppress_qt_warnings():
     environ["QT_SCREEN_SCALE_FACTORS"] = "1"
     environ["QT_SCALE_FACTOR"] = "1"
 
-
 def main():
-    suppress_qt_warnings()
-    
+    suppress_qt_warnings()    
     app = QApplication(sys.argv)
     ventana = AudiGest_terminado()
     ventana.show()

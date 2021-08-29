@@ -19,7 +19,7 @@ class Dialogo(object):
 
         #boton procesar (el de abajo)
         self.btn_procesar = QtWidgets.QPushButton(Dialogo)
-        self.btn_procesar.setEnabled(False)
+        self.btn_procesar.setEnabled(True)
         self.btn_procesar.setGeometry(QtCore.QRect(220, 370, 121, 41))
         font = QtGui.QFont()
         font.setPointSize(14)

@@ -36,11 +36,15 @@ def suppress_qt_warnings():
     environ["QT_SCALE_FACTOR"] = "1"
 
 
-if __name__ == '__main__':
-    suppress_qt_warnings()
+def correr_programa():
+    suppress_qt_warnings() #para evitar los errores
+
     app = QApplication(sys.argv)
     dialogo = CargaArchivosAplicacion()
     t = ProcesoCargaArchivo(dialogo)
     t.start()        
-    #dialogo.exec()
+    dialogo.exec()
     sys.exit(app.exec_()) 
+
+if __name__ == '__main__':
+    correr_programa()    
