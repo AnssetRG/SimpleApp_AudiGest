@@ -17,6 +17,8 @@ class Dialogo(object):
         Dialogo.setEnabled(True)
         Dialogo.resize(570, 421)
 
+
+
         #boton procesar (el de abajo)
         self.btn_procesar = QtWidgets.QPushButton(Dialogo)
         self.btn_procesar.setEnabled(True)
@@ -119,7 +121,7 @@ class Dialogo(object):
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">Nombre del archivo de audio</span></p></body></html>"))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">Nombre del Archivo de Audio</span></p></body></html>"))
         self.lbl_texto1.setText(_translate("Dialogo", "1. Seleccione el audio"))
         self.lbl_texto2.setText(_translate("Dialogo", "2. Seleccione el rostro"))
         self.radio_btn1.setText(_translate("Dialogo", "Opción 1"))

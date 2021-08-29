@@ -5,7 +5,7 @@ from os import environ
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QCursor, QPixmap
-from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow,QLabel, QPushButton, QWidget, QGridLayout, QMessageBox, QFileDialog,QVBoxLayout,QHBoxLayout,QGraphicsPixmapItem, QGraphicsScene
+from PyQt5.QtWidgets import QApplication, QBoxLayout, QDialog, QMainWindow,QLabel, QPushButton, QWidget, QGridLayout, QMessageBox, QFileDialog,QVBoxLayout,QHBoxLayout,QGraphicsPixmapItem, QGraphicsScene
 from Dialogo import Dialogo
 from CargaArchivos import CargandoArchivos
 from CargaArchivosAplicacion import ProcesoCargaArchivo, CargaArchivosAplicacion, correr_programa
@@ -27,9 +27,13 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.ui.setupUi(self)
         self.imagenes()
         #self.activar_boton_procesar()        
+
+        widgets["audio_file"].append(self.ui.caja_texto1)
+
         self.ui.btn_cargar.clicked.connect(self.set_new_file)
         self.ui.btn_procesar.clicked.connect(correr_programa)
         
+
     def imagenes(self):        
         self.scene = QGraphicsScene(self)
         self.scene2 = QGraphicsScene(self)
@@ -68,7 +72,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
 
         if temp_split[len(temp_split) - 1] == "":
             if parameters["audio"][-1] == "":
-                resultado = "Nombre del archivo de audio"
+                resultado = "Nombre del Archivo de Audio"
             else:
                 resultado = parameters["audio"][-1]
         else:
@@ -80,7 +84,10 @@ class AudiGest_terminado(QDialog,QMainWindow):
                 self.alert_window()
                 resultado = parameters["audio"][-1] 
         parameters["audio"].append(resultado)
+        #print(parameters['audio'])
+        #print(widgets['audio_file']) 
         widgets["audio_file"][-1].setText(parameters["audio"][-1])
+  
 
     def alert_window(self):
         msg = QMessageBox()
@@ -89,12 +96,14 @@ class AudiGest_terminado(QDialog,QMainWindow):
         msg.setInformativeText('La duración del audio es mayor a la esperada.')
         msg.setWindowTitle("Error de Carga de Audio")
         msg.exec_()
-
+    
     def activar_boton_procesar(self):
+        
         if self.ui.radio_btn1.isChecked() == True or self.ui.radio_btn2.isChecked() == True or self.ui.radio_btn3.isChecked() == True:
             self.ui.btn_procesar.setEnabled(True)
         else: 
             self.ui.btn_procesar.setEnabled(False)
+    
 
 def suppress_qt_warnings():
     environ["QT_DEVICE_PIXEL_RATIO"] = "0"
@@ -111,8 +120,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
-

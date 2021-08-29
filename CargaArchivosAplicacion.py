@@ -5,7 +5,6 @@ from PyQt5.QtWidgets import QApplication, QDialog
 from CargaArchivos import CargandoArchivos
 from os import environ
 
-
 class CargaArchivosAplicacion(QDialog):
     def __init__(self): #constructor
         super().__init__() #se invoca el constructor de la clase padre por medio de la función super  
@@ -44,7 +43,7 @@ def correr_programa():
     dialogo = CargaArchivosAplicacion()
     t = ProcesoCargaArchivo(dialogo)
     t.start()        
-    dialogo.exec()
+    #dialogo.exec()
     sys.exit(app.exec_()) 
 
 if __name__ == '__main__':
