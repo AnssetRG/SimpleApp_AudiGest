@@ -20,7 +20,7 @@ class Dialogo(object):
         #boton procesar (el de abajo)
         self.btn_procesar = QtWidgets.QPushButton(Dialogo)
         self.btn_procesar.setEnabled(False)
-        self.btn_procesar.setGeometry(QtCore.QRect(230, 360, 131, 51))
+        self.btn_procesar.setGeometry(QtCore.QRect(220, 370, 121, 41))
         font = QtGui.QFont()
         font.setPointSize(14)
         self.btn_procesar.setFont(font)
@@ -55,7 +55,7 @@ class Dialogo(object):
         font.setPointSize(14)
         self.lbl_texto2.setFont(font)
         self.lbl_texto2.setObjectName("lbl_texto2")
-        
+
         #Botón radio 1
         self.radio_btn1 = QtWidgets.QRadioButton(Dialogo)
         self.radio_btn1.setGeometry(QtCore.QRect(60, 170, 91, 31))
@@ -66,7 +66,7 @@ class Dialogo(object):
 
         #Botón radio 2
         self.radio_btn2 = QtWidgets.QRadioButton(Dialogo)
-        self.radio_btn2.setGeometry(QtCore.QRect(250, 180, 81, 21))
+        self.radio_btn2.setGeometry(QtCore.QRect(240, 170, 81, 21))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.radio_btn2.setFont(font)
@@ -74,7 +74,7 @@ class Dialogo(object):
 
         #Botón radio 3
         self.radio_btn3 = QtWidgets.QRadioButton(Dialogo)
-        self.radio_btn3.setGeometry(QtCore.QRect(430, 180, 81, 21))
+        self.radio_btn3.setGeometry(QtCore.QRect(430, 170, 81, 21))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.radio_btn3.setFont(font)
@@ -82,17 +82,22 @@ class Dialogo(object):
 
         #Imagen 1
         self.gpc_imagen1 = QtWidgets.QGraphicsView(Dialogo)
-        self.gpc_imagen1.setGeometry(QtCore.QRect(20, 210, 161, 131))
+        self.gpc_imagen1.setGeometry(QtCore.QRect(30, 200, 150, 150))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.gpc_imagen1.sizePolicy().hasHeightForWidth())
+        self.gpc_imagen1.setSizePolicy(sizePolicy)
         self.gpc_imagen1.setObjectName("gpc_imagen1")
 
         #Imagen 2
         self.gpc_imagen2 = QtWidgets.QGraphicsView(Dialogo)
-        self.gpc_imagen2.setGeometry(QtCore.QRect(210, 210, 161, 131))
+        self.gpc_imagen2.setGeometry(QtCore.QRect(210, 200, 150, 150))
         self.gpc_imagen2.setObjectName("gpc_imagen2")
 
         #Imagen 3
         self.gpc_imagen3 = QtWidgets.QGraphicsView(Dialogo)
-        self.gpc_imagen3.setGeometry(QtCore.QRect(390, 210, 161, 131))
+        self.gpc_imagen3.setGeometry(QtCore.QRect(390, 200, 150, 150))
         self.gpc_imagen3.setObjectName("gpc_imagen3")
 
         #Botón de arriba (Cargar)
@@ -108,7 +113,7 @@ class Dialogo(object):
 
     def retranslateUi(self, Dialogo):
         _translate = QtCore.QCoreApplication.translate
-        Dialogo.setWindowTitle(_translate("Dialogo", "Audigest v1.0"))
+        Dialogo.setWindowTitle(_translate("Dialogo", "Audigest"))
         self.btn_procesar.setText(_translate("Dialogo", "Procesar"))
         self.caja_texto1.setHtml(_translate("Dialogo", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"

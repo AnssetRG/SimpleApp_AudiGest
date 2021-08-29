@@ -24,18 +24,19 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.ui = Dialogo()
         self.ui.setupUi(self)
         self.imagenes()
-
-    def imagenes(self):
-        #sección imagenes
+        self.ui.btn_cargar.clicked.connect(self.set_new_file)
+        
+        
+    def imagenes(self):        
         self.scene = QGraphicsScene(self)
         self.scene2 = QGraphicsScene(self)
         self.scene3 = QGraphicsScene(self)
         pixmap = QPixmap()
         pixmap2 = QPixmap()
         pixmap3 = QPixmap()
-        pixmap.load('cara1.png')
-        pixmap2.load('cara2.png')
-        pixmap3.load('cara3.png')
+        pixmap.load('imagenes\cara1.png')
+        pixmap2.load('imagenes\cara2.png')
+        pixmap3.load('imagenes\cara3.png')
         item = QGraphicsPixmapItem(pixmap)
         item2 = QGraphicsPixmapItem(pixmap2)
         item3 = QGraphicsPixmapItem(pixmap3)
@@ -48,13 +49,47 @@ class AudiGest_terminado(QDialog,QMainWindow):
 
         self.show()
         
-    def closeEvent(self, event):
+    def closeEvent(self, event):        
         reply = QMessageBox.question(self, 'Confirmar Cerrar Ventana', '¿Está seguro que quiere salir de la aplicación?',QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
             event.accept()
         else:
             event.ignore() 
+
+    def set_new_file(self):
+        fname = QFileDialog.getOpenFileName(None,'Abrir Archivo', '','Audio (*.wav *.WAV)')
+        temp_split = fname[0].split('/')
+
+        resultado = ""
+
+        if temp_split[len(temp_split) - 1] == "":
+            if parameters["audio"][-1] == "":
+                resultado = "Nombre del archivo de audio"
+            else:
+                resultado = parameters["audio"][-1]
+        else:
+            y, sr = librosa.load(fname[0])
+            audio_length = librosa.get_duration(y=y, sr=sr)
+            if audio_length < 6:
+                resultado = temp_split[len(temp_split) - 1]
+            else:
+                self.alert_window()
+                resultado = parameters["audio"][-1] 
+        parameters["audio"].append(resultado)
+        widgets["audio_file"][-1].setText(parameters["audio"][-1])        
+
+    
+    def alert_window(self):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setText("Error")
+        msg.setInformativeText('La duración del audio es mayor a la esperada.')
+        msg.setWindowTitle("Error de Carga de Audio")
+        msg.exec_()
+
+    
+
 
 
 def suppress_qt_warnings():
