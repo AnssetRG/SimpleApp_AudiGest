@@ -108,8 +108,6 @@ class AudioGrid(QVBoxLayout):
                 self.alert_window()
                 resultado = parameters["audio"][-1] 
         parameters["audio"].append(resultado)
-        print(parameters['audio'])
-        print(widgets['audio_file']) 
         widgets["audio_file"][-1].setText(parameters["audio"][-1])        
 
     

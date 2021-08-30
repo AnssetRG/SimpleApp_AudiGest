@@ -7,7 +7,6 @@ from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QCursor, QPixmap
 from PyQt5.QtWidgets import QApplication, QBoxLayout, QDialog, QMainWindow,QLabel, QPushButton, QWidget, QGridLayout, QMessageBox, QFileDialog,QVBoxLayout,QHBoxLayout,QGraphicsPixmapItem, QGraphicsScene
 from Dialogo import Dialogo
-from CargaArchivos import CargandoArchivos
 from CargaArchivosAplicacion import ProcesoCargaArchivo, CargaArchivosAplicacion, correr_programa
 
 parameters = {
@@ -26,6 +25,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.ui = Dialogo()
         self.ui.setupUi(self)
         self.imagenes()
+        parameters["audio"].append("")
         #self.activar_boton_procesar()        
 
         widgets["audio_file"].append(self.ui.caja_texto1)
@@ -84,8 +84,6 @@ class AudiGest_terminado(QDialog,QMainWindow):
                 self.alert_window()
                 resultado = parameters["audio"][-1] 
         parameters["audio"].append(resultado)
-        #print(parameters['audio'])
-        #print(widgets['audio_file']) 
         widgets["audio_file"][-1].setText(parameters["audio"][-1])
   
 
