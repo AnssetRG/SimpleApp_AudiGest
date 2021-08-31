@@ -17,7 +17,7 @@ class CargaArchivosAplicacion(QDialog):
 
 
 class ProcesoCargaArchivo(threading.Thread):
-    
+    contador = 0
     def __init__(self, dialogo):
         threading.Thread.__init__(self)
         self.dialogo = dialogo
@@ -25,7 +25,7 @@ class ProcesoCargaArchivo(threading.Thread):
 
     def run(self):
         while self.contador <=100:
-            time.sleep(0.25)
+            time.sleep(0.25)          
             self.dialogo.ui.pbr_cargando_archivo.setValue(self.contador)
             self.contador += 10
 
@@ -38,7 +38,6 @@ def suppress_qt_warnings():
 
 def correr_programa():
     suppress_qt_warnings() #para evitar los errores
-
     app = QApplication(sys.argv)
     dialogo = CargaArchivosAplicacion()
     t = ProcesoCargaArchivo(dialogo)

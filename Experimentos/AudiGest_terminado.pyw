@@ -1,13 +1,11 @@
 import sys
 import librosa
-import os
+#import os
 from os import environ
-from PyQt5 import QtWidgets
-from PyQt5 import QtGui, QtCore
-from PyQt5.QtGui import QCursor, QPixmap
-from PyQt5.QtWidgets import QApplication, QBoxLayout, QDialog, QMainWindow,QLabel, QPushButton, QWidget, QGridLayout, QMessageBox, QFileDialog,QVBoxLayout,QHBoxLayout,QGraphicsPixmapItem, QGraphicsScene
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QFileDialog,QGraphicsPixmapItem, QGraphicsScene
 from Dialogo import Dialogo
-from CargaArchivosAplicacion import ProcesoCargaArchivo, CargaArchivosAplicacion, correr_programa
+from CargaArchivosAplicacion import correr_programa
 
 parameters = {
     "audio": [],
@@ -21,18 +19,27 @@ widgets = {
 
 class AudiGest_terminado(QDialog,QMainWindow):
     def __init__(self):        
+        #inicializadores
         super().__init__()
         self.ui = Dialogo()
         self.ui.setupUi(self)
-        self.imagenes()
-        parameters["audio"].append("")
-        #self.activar_boton_procesar()        
 
+        #carga imagenes
+        self.imagenes()
+        
+        #variable global
+        self.bandera_procesar = False
+        #bibliotecas 
+        parameters["audio"].append("")
         widgets["audio_file"].append(self.ui.caja_texto1)
 
+        #función de botones       
+        self.ui.radio_btn1.toggled.connect(self.activar_boton_procesar)
+        self.ui.radio_btn2.toggled.connect(self.activar_boton_procesar)
+        self.ui.radio_btn3.toggled.connect(self.activar_boton_procesar)
         self.ui.btn_cargar.clicked.connect(self.set_new_file)
-        self.ui.btn_procesar.clicked.connect(correr_programa)
-        
+        self.ui.btn_procesar.clicked.connect(self.mensaje_boton)
+        self.ui.btn_procesar.clicked.connect(correr_programa)                
 
     def imagenes(self):        
         self.scene = QGraphicsScene(self)
@@ -64,7 +71,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
         else:
             event.ignore() 
 
-    def set_new_file(self):
+    def set_new_file(self):        
         fname = QFileDialog.getOpenFileName(None,'Abrir Archivo', '','Audio (*.wav *.WAV)')
         temp_split = fname[0].split('/')
 
@@ -73,20 +80,24 @@ class AudiGest_terminado(QDialog,QMainWindow):
         if temp_split[len(temp_split) - 1] == "":
             if parameters["audio"][-1] == "":
                 resultado = "Nombre del Archivo de Audio"
+                               
             else:
-                resultado = parameters["audio"][-1]
+                resultado = parameters["audio"][-1]                
         else:
             y, sr = librosa.load(fname[0])
-            audio_length = librosa.get_duration(y=y, sr=sr)
+            audio_length = librosa.get_duration(y=y, sr=sr)            
+
             if audio_length < 6:
                 resultado = temp_split[len(temp_split) - 1]
+                #la bandera se enciende cuando el audio es correcto
+                self.bandera_procesar = True
+                self.activar_boton_procesar()
             else:
                 self.alert_window()
                 resultado = parameters["audio"][-1] 
         parameters["audio"].append(resultado)
         widgets["audio_file"][-1].setText(parameters["audio"][-1])
   
-
     def alert_window(self):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Critical)
@@ -95,14 +106,18 @@ class AudiGest_terminado(QDialog,QMainWindow):
         msg.setWindowTitle("Error de Carga de Audio")
         msg.exec_()
     
-    def activar_boton_procesar(self):
-        
-        if self.ui.radio_btn1.isChecked() == True or self.ui.radio_btn2.isChecked() == True or self.ui.radio_btn3.isChecked() == True:
-            self.ui.btn_procesar.setEnabled(True)
-        else: 
-            self.ui.btn_procesar.setEnabled(False)
-    
+    def activar_boton_procesar(self):        
+        if self.bandera_procesar == True:
+            self.ui.btn_procesar.setEnabled(True)  
 
+    def mensaje_boton(self):
+        if self.ui.radio_btn1.isChecked() == True:
+            print("La imagen 1 ha sido seleccionada")
+        if self.ui.radio_btn2.isChecked() == True:
+            print("La imagen 2 ha sido seleccionada")
+        if self.ui.radio_btn3.isChecked() == True:
+            print("La imagen 3 ha sido seleccionada")  
+    
 def suppress_qt_warnings():
     environ["QT_DEVICE_PIXEL_RATIO"] = "0"
     environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
