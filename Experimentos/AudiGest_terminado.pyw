@@ -89,9 +89,10 @@ class AudiGest_terminado(QDialog,QMainWindow):
 
             if audio_length < 6:
                 resultado = temp_split[len(temp_split) - 1]
+                
                 #la bandera se enciende cuando el audio es correcto
-                self.bandera_procesar = True
                 self.activar_boton_procesar()
+                self.bandera_procesar = True                
             else:
                 self.alert_window()
                 resultado = parameters["audio"][-1] 
