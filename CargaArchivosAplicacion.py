@@ -1,7 +1,8 @@
-import sys
+#import sys
 import threading
 import time
-from PyQt5.QtWidgets import QApplication, QDialog
+#from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QDialog
 from CargaArchivos import CargandoArchivos
 from os import environ
 

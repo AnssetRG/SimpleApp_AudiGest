@@ -46,6 +46,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.scene = QGraphicsScene(self)
         self.scene2 = QGraphicsScene(self)
         self.scene3 = QGraphicsScene(self)
+        
         pixmap = QPixmap()
         pixmap2 = QPixmap()
         pixmap3 = QPixmap()
