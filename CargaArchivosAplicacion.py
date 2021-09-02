@@ -1,9 +1,9 @@
-from Dialogo import Dialogo
-import sys
+#from Dialogo import Dialogo
+#import sys
 import threading
 import time
-from typing import Container
-from PyQt5.QtWidgets import QApplication
+#from typing import Container
+#from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QDialog
 from CargaArchivos import CargandoArchivos
 from os import close, environ
@@ -29,8 +29,7 @@ class ProcesoCargaArchivo(threading.Thread):
         self.contador = 0
 
     def run(self):
-        while self.contador <=100:
-            print(self.contador)
+        while self.contador <=100:           
             time.sleep(0.25)          
             self.dialogo.ui.pbr_cargando_archivo.setValue(self.contador)            
             self.contador += 10

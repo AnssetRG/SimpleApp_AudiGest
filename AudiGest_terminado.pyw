@@ -1,6 +1,6 @@
 import sys
 import librosa
-import os
+#import os
 from os import environ
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QFileDialog,QGraphicsPixmapItem, QGraphicsScene
