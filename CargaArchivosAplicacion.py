@@ -1,10 +1,12 @@
-#import sys
+from Dialogo import Dialogo
+import sys
 import threading
 import time
-#from PyQt5.QtWidgets import QApplication
+from typing import Container
+from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QDialog
 from CargaArchivos import CargandoArchivos
-from os import environ
+from os import close, environ
 
 
 class CargaArchivosAplicacion(QDialog):
@@ -12,10 +14,12 @@ class CargaArchivosAplicacion(QDialog):
         super().__init__()
 
         self.ui = CargandoArchivos()
-        self.ui.setupUi(self)
+        self.ui.setupUi(self)   
 
         self.show()
 
+    def cerrar_aplicacion(self):        
+        self.close()
 
 class ProcesoCargaArchivo(threading.Thread):
     contador = 0
@@ -26,9 +30,13 @@ class ProcesoCargaArchivo(threading.Thread):
 
     def run(self):
         while self.contador <=100:
+            print(self.contador)
             time.sleep(0.25)          
-            self.dialogo.ui.pbr_cargando_archivo.setValue(self.contador)
+            self.dialogo.ui.pbr_cargando_archivo.setValue(self.contador)            
             self.contador += 10
+            if self.contador == 100:
+                self.dialogo.cerrar_aplicacion()
+            
 
 def suppress_qt_warnings():
     environ["QT_DEVICE_PIXEL_RATIO"] = "0"
