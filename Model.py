@@ -72,5 +72,6 @@ class AudiGestNet(object):
         image.unsqueeze_(0)
         self.model.to(self.device)
         predicted_label=np.argmax(self.model(image).detach().cpu())
-        emotion_predicted = str(self.emotions[predicted_label.numpy()])
+        emotion_predicted = str(self.emotions[predicted_label.numpy()])        
+        print(emotion_predicted)
         return emotion_predicted
