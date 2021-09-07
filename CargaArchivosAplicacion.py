@@ -29,12 +29,11 @@ class ProcesoCargaArchivo(threading.Thread):
         self.contador = 0
 
     def run(self):
-        while self.contador <=100:           
+        while self.contador <= 100:           
             time.sleep(0.25)          
             self.dialogo.ui.pbr_cargando_archivo.setValue(self.contador)            
             self.contador += 10
-            if self.contador == 100:
-                self.dialogo.cerrar_aplicacion()
+        self.dialogo.cerrar_aplicacion()
             
 
 def suppress_qt_warnings():
