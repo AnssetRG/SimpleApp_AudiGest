@@ -40,13 +40,15 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.ui.radio_btn2.toggled.connect(self.activar_boton_procesar)
         self.ui.radio_btn3.toggled.connect(self.activar_boton_procesar)
         self.ui.btn_cargar.clicked.connect(self.set_new_file)
+        self.ui.btn_procesar.clicked.connect(correr_programa) 
         self.ui.btn_procesar.clicked.connect(self.mensaje_boton)
-        self.ui.btn_procesar.clicked.connect(correr_programa)                
+                       
 
     def imagenes(self):        
         self.scene = QGraphicsScene(self)
         self.scene2 = QGraphicsScene(self)
         self.scene3 = QGraphicsScene(self)
+        
         pixmap = QPixmap()
         pixmap2 = QPixmap()
         pixmap3 = QPixmap()
