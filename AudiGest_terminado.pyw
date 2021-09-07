@@ -125,9 +125,10 @@ class AudiGest_terminado(QDialog,QMainWindow):
             print("La imagen 3 ha sido seleccionada")
     
     def inferir_audio(self):
+        print(parameters["audio"][-1])
         print(self.net.prediction(path=parameters["audio"][-1]))
-        
-    
+
+            
 def suppress_qt_warnings():
     environ["QT_DEVICE_PIXEL_RATIO"] = "0"
     environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
