@@ -42,6 +42,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.ui.btn_cargar.clicked.connect(self.set_new_file)
         self.ui.btn_procesar.clicked.connect(correr_programa) 
         self.ui.btn_procesar.clicked.connect(self.mensaje_boton)
+        self.ui.btn_procesar.clicked.connect(self.inferir_audio)
                        
 
     def imagenes(self):        
@@ -124,7 +125,8 @@ class AudiGest_terminado(QDialog,QMainWindow):
             print("La imagen 3 ha sido seleccionada")
     
     def inferir_audio(self):
-        self.net.prediction(path=parameters["audio"][-1])
+        print(self.net.prediction(path=parameters["audio"][-1]))
+        
     
 def suppress_qt_warnings():
     environ["QT_DEVICE_PIXEL_RATIO"] = "0"

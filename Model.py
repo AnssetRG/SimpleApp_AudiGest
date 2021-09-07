@@ -69,9 +69,16 @@ class AudiGestNet(object):
         PIL_image = Image.fromarray((img*255).astype(np.uint8))
         image=self.transform(PIL_image)
         image = image.to(self.device)
-        image.unsqueeze_(0)
+        image = image.unsqueeze_(0)
         self.model.to(self.device)
         predicted_label=np.argmax(self.model(image).detach().cpu())
         emotion_predicted = str(self.emotions[predicted_label.numpy()])        
-        #print(emotion_predicted)
+        print(emotion_predicted)
         return emotion_predicted
+
+if __name__ == '__main__':
+    hola = AudiGestNet()
+    
+    hola.prediction('Audios/contempt.wav')
+
+
