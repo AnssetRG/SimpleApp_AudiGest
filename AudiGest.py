@@ -119,7 +119,6 @@ class AudioGrid(QVBoxLayout):
         msg.setWindowTitle("Error de Carga de Audio")
         msg.exec_()
 
-
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__()
