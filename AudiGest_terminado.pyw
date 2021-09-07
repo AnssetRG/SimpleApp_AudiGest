@@ -6,6 +6,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QFileDialog,QGraphicsPixmapItem, QGraphicsScene
 from Dialogo import Dialogo
 from CargaArchivosAplicacion import correr_programa
+from Model import AudiGestNet
 
 parameters = {
     "audio": [],
@@ -23,6 +24,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
         super().__init__()
         self.ui = Dialogo()
         self.ui.setupUi(self)
+        self.net = AudiGestNet()
 
         #carga imagenes
         self.imagenes()
@@ -117,7 +119,10 @@ class AudiGest_terminado(QDialog,QMainWindow):
         if self.ui.radio_btn2.isChecked() == True:
             print("La imagen 2 ha sido seleccionada")
         if self.ui.radio_btn3.isChecked() == True:
-            print("La imagen 3 ha sido seleccionada")  
+            print("La imagen 3 ha sido seleccionada")
+    
+    def inferir_audio(self):
+        self.net.prediction(path=parameters["audio"][-1])
     
 def suppress_qt_warnings():
     environ["QT_DEVICE_PIXEL_RATIO"] = "0"
