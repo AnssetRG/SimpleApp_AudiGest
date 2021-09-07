@@ -30,7 +30,9 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.Audio_val = False
         self.Image_val = False
 
+        #Array que guardará valores referente a cada imagen, por el momento es un array de string
         self.images_values = ["Image 1", "Image 2" ,"Image 3"]
+        #Valor actual que se usará como imagen, cambia conforme se seleccione una nueva imagen
         self.image_current_value = None
 
         #carga imagenes
@@ -42,7 +44,8 @@ class AudiGest_terminado(QDialog,QMainWindow):
         parameters["audio"].append("")
         widgets["audio_file"].append(self.ui.caja_texto1)
 
-        #función de botones       
+        #función de botones
+        #a los botones se le está añadiendo la función con 2 parámetros: el valor que guarda la imagen y el botón que está siendo interactuado
         self.ui.radio_btn1.toggled.connect(lambda: (self.set_image_file(self.images_values[0], self.ui.radio_btn1)))
         self.ui.radio_btn2.toggled.connect(lambda: (self.set_image_file(self.images_values[1], self.ui.radio_btn2)))
         self.ui.radio_btn3.toggled.connect(lambda: (self.set_image_file(self.images_values[2], self.ui.radio_btn3)))
@@ -121,7 +124,8 @@ class AudiGest_terminado(QDialog,QMainWindow):
             #print("Current Audio Path: ", parameters["audio_path"][-1])
         #else:
             #print("Current Audio Path: Dictionary is EMPTY")
-  
+    
+    #Función de cuando es interactuado el botón de las imágenes, solo si se marca entonces se guarda los valores
     def set_image_file(self, image, button):
         if button.isChecked():
             #print("Selected :", image)
@@ -137,17 +141,18 @@ class AudiGest_terminado(QDialog,QMainWindow):
         msg.setWindowTitle("Error de Carga de Audio")
         msg.exec_()
         
-    
+    #Función para validar que tanto el audio como la imagen han sido seleccionados, en ese caso se habilita el botón de procesar
     def activar_boton_procesar(self):
         if self.Audio_val and self.Image_val:
             self.ui.btn_procesar.setEnabled(True)  
 
+    #El mensaje ahora muestra la información del valor guardado actual (referente a la imagen seleccionada)
     def mensaje_boton(self):
         print("La %s ha sido seleccionada" % self.image_current_value)
     
+    #Función de la aplicación que llama la inferencia de la red
     def inferir_audio(self):
-        print(parameters["audio"][-1])
-        print(self.net.prediction(path=parameters["audio"][-1]))
+        print(self.net.prediction(path=parameters["audio_path"][-1]))
 
             
 def suppress_qt_warnings():

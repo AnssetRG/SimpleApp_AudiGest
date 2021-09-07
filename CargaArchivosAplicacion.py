@@ -30,7 +30,7 @@ class ProcesoCargaArchivo(threading.Thread):
 
     def run(self):
         while self.contador <= 100:           
-            time.sleep(0.25)          
+            time.sleep(0.25)   
             self.dialogo.ui.pbr_cargando_archivo.setValue(self.contador)            
             self.contador += 10
         self.dialogo.cerrar_aplicacion()
