@@ -29,6 +29,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.net = AudiGestNet()
         self.Audio_val = False
         self.Image_val = False
+        self.current_answer = None
 
         #Array que guardará valores referente a cada imagen, por el momento es un array de string
         self.images_values = ["Image 1", "Image 2" ,"Image 3"]
@@ -152,7 +153,10 @@ class AudiGest_terminado(QDialog,QMainWindow):
     
     #Función de la aplicación que llama la inferencia de la red
     def inferir_audio(self):
-        print(self.net.prediction(path=parameters["audio_path"][-1]))
+        self.current_answer = self.net.prediction(path=parameters["audio_path"][-1])
+    
+    def show_answer(self):
+        print(self.current_answer)
 
             
 def suppress_qt_warnings():
@@ -162,7 +166,7 @@ def suppress_qt_warnings():
     environ["QT_SCALE_FACTOR"] = "1"
 
 def main():
-    suppress_qt_warnings()    
+    #suppress_qt_warnings()    
     app = QApplication(sys.argv)
     ventana = AudiGest_terminado()
     ventana.show()

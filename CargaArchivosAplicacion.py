@@ -14,6 +14,8 @@ class CargaArchivosAplicacion(QDialog):
     def __init__(self):
         super().__init__()
 
+        self.setModal(True)
+
         self.ui = CargandoArchivos()
         self.contador = 0
         self.ui.setupUi(self)
@@ -43,7 +45,7 @@ class ProcesoCargaArchivo(QThread):
         self.setTerminationEnabled(True)
         self.contador = 0
         while self.contador <= 100:
-            time.sleep(0.25)
+            time.sleep(0.1)
             self.update_progress_bar.emit(self.contador)
             self.contador += 10
         self.update_progress_bar.emit(self.contador)
@@ -57,7 +59,7 @@ def suppress_qt_warnings():
 
 
 def correr_programa():
-    suppress_qt_warnings() #para evitar los errores
+    #suppress_qt_warnings() #para evitar los errores
     #app = QApplication(sys.argv)
     dialogo = CargaArchivosAplicacion()
     t = ProcesoCargaArchivo(dialogo)
