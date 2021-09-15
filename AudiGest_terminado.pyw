@@ -1,6 +1,8 @@
 import sys
+import PyQt5
+from PyQt5 import QtCore
 import librosa
-#import os
+import os
 from os import environ
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QFileDialog,QGraphicsPixmapItem, QGraphicsScene
@@ -21,11 +23,11 @@ widgets = {
 }
 
 class AudiGest_terminado(QDialog,QMainWindow):
-    def __init__(self):        
+    def __init__(self, windows_size: QtCore.QSize):        
         #inicializadores
         super().__init__()
         self.ui = Dialogo()
-        self.ui.setupUi(self)
+        self.ui.setupUi(self, window_size=windows_size)
         self.net = AudiGestNet()
         self.Audio_val = False
         self.Image_val = False
@@ -54,25 +56,20 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.ui.btn_procesar.clicked.connect(correr_programa) 
         self.ui.btn_procesar.clicked.connect(self.mensaje_boton)
         self.ui.btn_procesar.clicked.connect(self.inferir_audio)
-                       
 
+    def load_picture(self, image_path):
+        pixmap = QPixmap()
+        pixmap.load(image_path)
+        item = QGraphicsPixmapItem(pixmap)
+        return item
+                       
     def imagenes(self):        
         self.scene = QGraphicsScene(self)
         self.scene2 = QGraphicsScene(self)
         self.scene3 = QGraphicsScene(self)
-        
-        pixmap = QPixmap()
-        pixmap2 = QPixmap()
-        pixmap3 = QPixmap()
-        pixmap.load('imagenes\cara1.png')
-        pixmap2.load('imagenes\cara2.png')
-        pixmap3.load('imagenes\cara3.png')
-        item = QGraphicsPixmapItem(pixmap)
-        item2 = QGraphicsPixmapItem(pixmap2)
-        item3 = QGraphicsPixmapItem(pixmap3)
-        self.scene.addItem(item)
-        self.scene2.addItem(item2)
-        self.scene3.addItem(item3)
+        self.scene.addItem(self.load_picture(os.path.join("imagenes","cara1.png")))
+        self.scene2.addItem(self.load_picture(os.path.join("imagenes","cara2.png")))
+        self.scene3.addItem(self.load_picture(os.path.join("imagenes","cara3.png")))
         self.ui.gpc_imagen1.setScene(self.scene)
         self.ui.gpc_imagen2.setScene(self.scene2)
         self.ui.gpc_imagen3.setScene(self.scene3)
@@ -88,7 +85,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
             event.ignore() 
 
     def set_new_file(self):        
-        fname = QFileDialog.getOpenFileName(None,'Abrir Archivo', '','Audio (*.wav *.WAV)')
+        fname = QFileDialog.getOpenFileName(None,'Abrir Archivo', os.path.join("Audios"),'Audio (*.wav *.WAV)')
         temp_split = fname[0].split('/')
 
         resultado = ""
@@ -168,7 +165,7 @@ def suppress_qt_warnings():
 def main():
     #suppress_qt_warnings()    
     app = QApplication(sys.argv)
-    ventana = AudiGest_terminado()
+    ventana = AudiGest_terminado(windows_size=app.primaryScreen().size())
     ventana.show()
     sys.exit(app.exec_())
 
