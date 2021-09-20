@@ -22,9 +22,11 @@ class AudiGestNet(object):
         self.transform = self.set_transformation()
         self.config = self.create_default_config()
 
-        self.n_fft = int(self.config['window_len'] * self.config['sample_rate'])
-        self.hop_len = int(self.config['sample_interval'] * self.config['sample_rate'])
-        self.mfcc_transformation = get_mfcc_transform(self.config['sample_rate'], self.config['n_mfcc'], n_fft=self.n_fft, hop_len=self.hop_len)
+        print(type(self.config))
+
+        self.n_fft = int(self.config['audio']['window_len'] * self.config['audio']['sample_rate'])
+        self.hop_len = int(self.config['audio']['sample_interval'] * self.config['audio']['sample_rate'])
+        self.mfcc_transformation = get_mfcc_transform(self.config['audio']['sample_rate'], self.config['audio']['n_mfcc'], n_fft=self.n_fft, hop_len=self.hop_len)
 
     def set_device(self):
         """
@@ -41,7 +43,7 @@ class AudiGestNet(object):
                 [0.485, 0.456, 0.406],
                 [0.229, 0.224, 0.225])])
     
-    def create_default_config():
+    def create_default_config(self):
         """
         Create a dictionary for configurations
         """
@@ -132,7 +134,7 @@ class AudiGestNet(object):
 
         #TO DO: llamar la función de animación
 
-    def process_audio(self, audio_path:str = "") -> tuple(torch.Tensor, torch.Tensor):
+    def process_audio(self, audio_path:str = ""):
         """
         Load and audio from an string path into a torch tensor. Then, it is used for extracting the melspectrogram and mfcc of the audio according Config parameters.
 
