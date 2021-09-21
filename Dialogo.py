@@ -12,10 +12,18 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Dialogo(object):
-    def setupUi(self, Dialogo):
+    def setupUi(self, Dialogo, window_size: QtCore.QSize):
         Dialogo.setObjectName("Dialogo")
         Dialogo.setEnabled(True)
         Dialogo.resize(570, 421)
+        size = window_size
+
+        #Dialogo.resize(size.width() *0.5, size.height()*0.5)
+
+        
+        print('Size: %d x %d' % (size.width(), size.height()))
+
+        print("Type: ", type(size))
         
         #boton procesar (el de abajo)
         self.btn_procesar = QtWidgets.QPushButton(Dialogo)
@@ -28,7 +36,7 @@ class Dialogo(object):
 
         #caja de texto (nombre del archivo de audio)
         self.caja_texto1 = QtWidgets.QTextBrowser(Dialogo)
-        self.caja_texto1.setGeometry(QtCore.QRect(250, 70, 291, 41))
+        self.caja_texto1.setGeometry(QtCore.QRect(220, 70, 311, 41))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.caja_texto1.setFont(font)
@@ -36,7 +44,7 @@ class Dialogo(object):
 
         #Texto de arriba (1. Seleccione el audio)
         self.lbl_texto1 = QtWidgets.QLabel(Dialogo)
-        self.lbl_texto1.setGeometry(QtCore.QRect(190, 0, 211, 61))
+        self.lbl_texto1.setGeometry(QtCore.QRect(190, 0, 221, 61))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -50,7 +58,7 @@ class Dialogo(object):
 
         #Texto de abajo (2. Seleccione el rostro)
         self.lbl_texto2 = QtWidgets.QLabel(Dialogo)
-        self.lbl_texto2.setGeometry(QtCore.QRect(190, 120, 201, 61))
+        self.lbl_texto2.setGeometry(QtCore.QRect(190, 120, 221, 61))
         font = QtGui.QFont()
         font.setPointSize(14)
         self.lbl_texto2.setFont(font)
@@ -58,7 +66,7 @@ class Dialogo(object):
 
         #Botón radio 1
         self.radio_btn1 = QtWidgets.QRadioButton(Dialogo)
-        self.radio_btn1.setGeometry(QtCore.QRect(60, 170, 91, 31))
+        self.radio_btn1.setGeometry(QtCore.QRect(60, 170, 101, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.radio_btn1.setFont(font)
@@ -66,7 +74,7 @@ class Dialogo(object):
 
         #Botón radio 2
         self.radio_btn2 = QtWidgets.QRadioButton(Dialogo)
-        self.radio_btn2.setGeometry(QtCore.QRect(240, 170, 81, 21))
+        self.radio_btn2.setGeometry(QtCore.QRect(240, 170, 101, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.radio_btn2.setFont(font)
@@ -74,7 +82,7 @@ class Dialogo(object):
 
         #Botón radio 3
         self.radio_btn3 = QtWidgets.QRadioButton(Dialogo)
-        self.radio_btn3.setGeometry(QtCore.QRect(430, 170, 81, 21))
+        self.radio_btn3.setGeometry(QtCore.QRect(430, 170, 101, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.radio_btn3.setFont(font)
@@ -102,7 +110,7 @@ class Dialogo(object):
 
         #Botón de arriba (Cargar)
         self.btn_cargar = QtWidgets.QPushButton(Dialogo)
-        self.btn_cargar.setGeometry(QtCore.QRect(80, 70, 131, 41))
+        self.btn_cargar.setGeometry(QtCore.QRect(50, 70, 131, 41))
         font = QtGui.QFont()
         font.setPointSize(14)
         self.btn_cargar.setFont(font)

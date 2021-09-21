@@ -5,6 +5,7 @@ import time
 #from typing import Container
 #from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QDialog
+from PyQt5.QtCore import QThread, pyqtSignal
 from CargaArchivos import CargandoArchivos
 from os import close, environ
 
@@ -13,28 +14,41 @@ class CargaArchivosAplicacion(QDialog):
     def __init__(self):
         super().__init__()
 
+        self.setModal(True)
+
         self.ui = CargandoArchivos()
-        self.ui.setupUi(self)   
+        self.contador = 0
+        self.ui.setupUi(self)
+
+        self.processClass = ProcesoCargaArchivo()
+        self.processClass.update_progress_bar.connect(self.update_progressBar)
+        self.processClass.start()
 
         self.show()
 
-    def cerrar_aplicacion(self):        
+    def update_progressBar(self, val):
+        if val <= 100:
+            self.ui.pbr_cargando_archivo.setValue(val)
+            self.contador = val
+        else:
+            self.cerrar_aplicacion()
+
+    def cerrar_aplicacion(self):
+        self.processClass.terminate()
         self.close()
 
-class ProcesoCargaArchivo(threading.Thread):
-    contador = 0
-    def __init__(self, dialogo):
-        threading.Thread.__init__(self)
-        self.dialogo = dialogo
-        self.contador = 0
+class ProcesoCargaArchivo(QThread):
+
+    update_progress_bar = pyqtSignal(int)
 
     def run(self):
-        while self.contador <=100:           
-            time.sleep(0.25)          
-            self.dialogo.ui.pbr_cargando_archivo.setValue(self.contador)            
+        self.setTerminationEnabled(True)
+        self.contador = 0
+        while self.contador <= 100:
+            time.sleep(0.1)
+            self.update_progress_bar.emit(self.contador)
             self.contador += 10
-            if self.contador == 100:
-                self.dialogo.cerrar_aplicacion()
+        self.update_progress_bar.emit(self.contador)
             
 
 def suppress_qt_warnings():
@@ -45,7 +59,7 @@ def suppress_qt_warnings():
 
 
 def correr_programa():
-    suppress_qt_warnings() #para evitar los errores
+    #suppress_qt_warnings() #para evitar los errores
     #app = QApplication(sys.argv)
     dialogo = CargaArchivosAplicacion()
     t = ProcesoCargaArchivo(dialogo)
