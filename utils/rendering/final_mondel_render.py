@@ -27,7 +27,7 @@ class ModelRender:
             if not os.path.exists(out_folder):
                 os.makedirs(out_folder)
 
-            audio_name = audio_path.split("\\")[-1].split(".")[-1]
+            audio_name = audio_path.split("/")[-1].split(".")[0]
             video_fname = os.path.join(out_folder, f'{audio_name}.mp4')
             temp_video_fname = os.path.join(out_folder, f'{audio_name}_tmp.mp4')
             self._render_sequences_helper(model, device, video_fname, temp_video_fname, audio_path, melspectrogram_tensor, mfcc_tensor)
@@ -56,10 +56,10 @@ class ModelRender:
         hidden = None
 
         with torch.no_grad():
-            melspec = melspec.unsqueeze(1)
+            # melspec = melspec.unsqueeze(1)
             melspec = melspec.to(device)
 
-            mfcc = mfcc.permute(0, 2, 1)
+            # mfcc = mfcc.permute(0, 2, 1)
             mfcc = mfcc.to(device)
 
             reconstructed, _ = model(melspec, mfcc, hidden)

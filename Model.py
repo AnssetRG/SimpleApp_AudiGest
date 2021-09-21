@@ -33,7 +33,7 @@ class AudiGestNet(object):
         print(type(self.config))
         model = AudiGest(self.config)
         model.to(self.device)
-        model.load("processed_data\training\AG_20")
+        model.load(20)
         return model
 
     def inference(self, audio_path: str ="", face_landmarks: torch.Tensor = None):
@@ -45,14 +45,15 @@ class AudiGestNet(object):
 
         melspectrogram, mfccs = self.process_audio(audio_path=audio_path)
 
-        audio_name = audio_path.split("\\")[-1].split(".")[-1]
+        audio_name = audio_path.split("/")[-1].split(".")[0]
+        print(audio_name)
         temp_video_fname = os.path.join("Videos", f'{audio_name}.mp4')
 
 
         #Set up configuration and dataset
         renderer = ModelRender(config=self.config)
         #Render the video and save from data
-        renderer.render_sequences(self.model,self.device, melspectrogram, mfccs,audio_path,"Videos")
+        renderer.render_sequences(self.model,self.device, melspectrogram, mfccs,audio_path, "Videos")
 
         return temp_video_fname
 

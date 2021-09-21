@@ -13,7 +13,7 @@ class VideoWindow(QDialog):
 
         self.setModal(True)
  
-        self.setWindowTitle(video_path.split("\\")[-1])
+        self.setWindowTitle(video_path.split("/")[-1])
         self.setGeometry(350, 100, 700, 500)
         self.setWindowIcon(QIcon('player.png'))
  
@@ -71,7 +71,8 @@ class VideoWindow(QDialog):
         self.mediaPlayer.positionChanged.connect(self.position_changed)
         self.mediaPlayer.durationChanged.connect(self.duration_changed)
 
-        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(video_path)))
+        print(video_path)
+        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile('file://' + video_path)))
         self.playBtn.setEnabled(True)
  
     def play_video(self):
