@@ -1,5 +1,4 @@
 import sys
-import PyQt5
 from PyQt5 import QtCore
 import librosa
 import os
@@ -9,7 +8,8 @@ from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QFi
 from numpy.lib.type_check import imag
 from Dialogo import Dialogo
 from CargaArchivosAplicacion import correr_programa
-from Model import AudiGestNet
+#from Model import AudiGestNet
+from VideoWindow import show_video
 
 parameters = {
     "audio": [],
@@ -23,12 +23,12 @@ widgets = {
 }
 
 class AudiGest_terminado(QDialog,QMainWindow):
-    def __init__(self, windows_size: QtCore.QSize):        
+    def __init__(self):        
         #inicializadores
         super().__init__()
         self.ui = Dialogo()
-        self.ui.setupUi(self, window_size=windows_size)
-        self.net = AudiGestNet()
+        self.ui.setupUi(self)
+        #self.net = AudiGestNet()
         self.Audio_val = False
         self.Image_val = False
         self.current_answer = None
@@ -116,12 +116,6 @@ class AudiGest_terminado(QDialog,QMainWindow):
                     resultado = parameters["audio"][-1] 
         parameters["audio"].append(resultado)
         widgets["audio_file"][-1].setText(parameters["audio"][-1])
-
-        #Si quieres validar qué path/dirección de audio se está guardando al intentar cargar un archivo
-        #if len(parameters["audio_path"]) > 0:
-            #print("Current Audio Path: ", parameters["audio_path"][-1])
-        #else:
-            #print("Current Audio Path: Dictionary is EMPTY")
     
     #Función de cuando es interactuado el botón de las imágenes, solo si se marca entonces se guarda los valores
     def set_image_file(self, image, button):
@@ -150,7 +144,8 @@ class AudiGest_terminado(QDialog,QMainWindow):
     
     #Función de la aplicación que llama la inferencia de la red
     def inferir_audio(self):
-        self.current_answer = self.net.prediction(path=parameters["audio_path"][-1])
+        show_video()
+        #self.current_answer = self.net.prediction(path=parameters["audio_path"][-1])
     
     def show_answer(self):
         print(self.current_answer)
@@ -165,7 +160,7 @@ def suppress_qt_warnings():
 def main():
     #suppress_qt_warnings()    
     app = QApplication(sys.argv)
-    ventana = AudiGest_terminado(windows_size=app.primaryScreen().size())
+    ventana = AudiGest_terminado()
     ventana.show()
     sys.exit(app.exec_())
 

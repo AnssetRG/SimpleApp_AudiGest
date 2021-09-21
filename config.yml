@@ -1,0 +1,36 @@
+audio:
+  fps: 30
+  max_samples: 16000
+  n_mfcc: 20
+  sample_interval: 0.03333333333333333
+  sample_rate: 16000
+  use_clean: true
+  window_len: 0.025
+files:
+  data_root: processed_data
+  face: processed_data/face.obj
+  raw_data_root: MEAD
+  subject_paths: processed_data/sbj_data_paths.pkl
+  test_csv: processed_data/test_dataset.csv
+  test_mini: processed_data/test_mini.csv
+  test_root: processed_data/test
+  train_csv: processed_data/train_dataset.csv
+  train_mini: processed_data/train_mini.csv
+  train_root: processed_data/train
+model:
+  fc:
+    drop: 0.5
+    hidden_1: 256
+    hidden_2: 128
+    hidden_3: 256
+    hidden_4: 512
+    in_feat: 576
+  lstm:
+    hidden_dim: 16
+    num_layers: 1
+  vertex_num: 468
+training:
+  batch_size: 64
+  decay_rate: 1.0
+  epochs: 10
+  learning_rate: 0.0001

@@ -12,18 +12,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Dialogo(object):
-    def setupUi(self, Dialogo, window_size: QtCore.QSize):
+    def setupUi(self, Dialogo):
         Dialogo.setObjectName("Dialogo")
         Dialogo.setEnabled(True)
         Dialogo.resize(570, 421)
-        size = window_size
-
-        #Dialogo.resize(size.width() *0.5, size.height()*0.5)
-
-        
-        print('Size: %d x %d' % (size.width(), size.height()))
-
-        print("Type: ", type(size))
         
         #boton procesar (el de abajo)
         self.btn_procesar = QtWidgets.QPushButton(Dialogo)
