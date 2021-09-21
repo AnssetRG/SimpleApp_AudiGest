@@ -1,14 +1,11 @@
 import sys
-from PyQt5 import QtCore
 import librosa
 import os
-from os import environ
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QFileDialog,QGraphicsPixmapItem, QGraphicsScene
-from numpy.lib.type_check import imag
 from Dialogo import Dialogo
-from CargaArchivosAplicacion import correr_programa
-#from Model import AudiGestNet
+from LoadWindow import start_load
+from Model import AudiGestNet
 from VideoWindow import show_video
 
 parameters = {
@@ -28,7 +25,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
         super().__init__()
         self.ui = Dialogo()
         self.ui.setupUi(self)
-        #self.net = AudiGestNet()
+        self.net = AudiGestNet()
         self.Audio_val = False
         self.Image_val = False
         self.current_answer = None
@@ -53,7 +50,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.ui.radio_btn2.toggled.connect(lambda: (self.set_image_file(self.images_values[1], self.ui.radio_btn2)))
         self.ui.radio_btn3.toggled.connect(lambda: (self.set_image_file(self.images_values[2], self.ui.radio_btn3)))
         self.ui.btn_cargar.clicked.connect(self.set_new_file)
-        self.ui.btn_procesar.clicked.connect(correr_programa) 
+        self.ui.btn_procesar.clicked.connect(start_load) 
         self.ui.btn_procesar.clicked.connect(self.mensaje_boton)
         self.ui.btn_procesar.clicked.connect(self.inferir_audio)
 
@@ -120,7 +117,6 @@ class AudiGest_terminado(QDialog,QMainWindow):
     #Función de cuando es interactuado el botón de las imágenes, solo si se marca entonces se guarda los valores
     def set_image_file(self, image, button):
         if button.isChecked():
-            #print("Selected :", image)
             self.Image_val = True
             self.activar_boton_procesar()
             self.image_current_value = image
@@ -144,21 +140,13 @@ class AudiGest_terminado(QDialog,QMainWindow):
     
     #Función de la aplicación que llama la inferencia de la red
     def inferir_audio(self):
+        video_path = self.net.inference(audio_path=parameters["audio_path"][-1])
         show_video()
-        #self.current_answer = self.net.prediction(path=parameters["audio_path"][-1])
     
     def show_answer(self):
         print(self.current_answer)
 
-            
-def suppress_qt_warnings():
-    environ["QT_DEVICE_PIXEL_RATIO"] = "0"
-    environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-    environ["QT_SCREEN_SCALE_FACTORS"] = "1"
-    environ["QT_SCALE_FACTOR"] = "1"
-
-def main():
-    #suppress_qt_warnings()    
+def main(): 
     app = QApplication(sys.argv)
     ventana = AudiGest_terminado()
     ventana.show()

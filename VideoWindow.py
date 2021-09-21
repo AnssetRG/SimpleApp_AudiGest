@@ -13,7 +13,7 @@ class VideoWindow(QDialog):
 
         self.setModal(True)
  
-        self.setWindowTitle("PyQt5 Media Player")
+        self.setWindowTitle(video_path.split("\\")[-1])
         self.setGeometry(350, 100, 700, 500)
         self.setWindowIcon(QIcon('player.png'))
  
@@ -95,13 +95,12 @@ class VideoWindow(QDialog):
     def set_position(self, position):
         self.mediaPlayer.setPosition(position)
 
-def show_video(video_path: str = os.path.join("Videos_test","FFVI.wmv")):
+def show_video(video_path: str = os.path.join("Videos","TestVideo.wmv")):
   player = VideoWindow(video_path)
   player.exec()
 
 
 if __name__ == '__main__':
-  #show_video()
   app = QApplication(sys.argv)
-  window = VideoWindow()
+  show_video()
   sys.exit(app.exec_())

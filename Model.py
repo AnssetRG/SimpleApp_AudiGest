@@ -1,14 +1,9 @@
-from librosa.feature.spectral import mfcc
 import torch
-import librosa
-import numpy as np
-from torch import nn
-from torch._C import device
-from torchvision import transforms, models
-from PIL import Image 
-from utils.model import AudiGest
+from utils.model.AudiGest import AudiGest
 from utils.audio import get_mfcc_transform, get_signal_mono, get_sliced_melspectrogram, process_framed_mfcc
 from utils.config_creator import get_config
+from utils.rendering.final_mondel_render import ModelRender
+import os
 
 class AudiGestNet(object):
     """
@@ -18,10 +13,8 @@ class AudiGestNet(object):
     #Iniciar la clase del modelo de Deep Learning
     def __init__(self) -> None:
         self.device = self.set_device()
-        self.emotions = self.set_emotions()
-        self.model = self.set_model()
-        self.transform = self.set_transformation()
         self.config = get_config()
+        self.model = self.set_model()
 
         self.n_fft = int(self.config['audio']['window_len'] * self.config['audio']['sample_rate'])
         self.hop_len = int(self.config['audio']['sample_interval'] * self.config['audio']['sample_rate'])
@@ -32,53 +25,16 @@ class AudiGestNet(object):
         Select CUDA if GPU is available, otherwise cpu
         """
         return torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-    def set_transformation(self):
-        return transforms.Compose([
-            transforms.Resize(255),
-            transforms.CenterCrop(224),
-            transforms.ToTensor(),
-            transforms.Normalize(
-                [0.485, 0.456, 0.406],
-                [0.229, 0.224, 0.225])])
     
     def set_model(self):
         """
         Initialize AudiGest net and load weights
         """
-        model = models.densenet121(pretrained=True)
-        #model = AudiGest(self.config, self.device)
+        print(type(self.config))
+        model = AudiGest(self.config)
         model.to(self.device)
-        model.classifier = nn.Sequential(nn.Linear(1024,512),nn.LeakyReLU(),nn.Linear(512,8))
-        #TO DO: Load AudiGest Net weights
-        model.load_state_dict(torch.load('SER_densenet121.pt'))
+        model.load("processed_data\training\AG_20")
         return model
-
-    #Labels o categorías de predicción
-    def set_emotions(self):
-        emotions=['angry', 'contempt', 'disgusted', 'fear', 'happy', 'neutral', 'sad', 'surprised']
-        return emotions
-
-    #Función de Inferencia/Predicción
-    def prediction(self, path = ""):
-        """Carga el audio desde una dirección del ordenador (path) e infiere la emoción predominante.
-
-        Parameters
-        ----------
-        path : str
-            Ruta del audio wav a cargar
-        """
-        y, sr = librosa.load(path)
-        S_full, phase = librosa.magphase(librosa.stft(y))
-        img=np.stack((S_full,)*3, axis=-1)
-        PIL_image = Image.fromarray((img*255).astype(np.uint8))
-        image=self.transform(PIL_image)
-        image = image.to(self.device)
-        image = image.unsqueeze_(0)
-        self.model.to(self.device)
-        predicted_label=np.argmax(self.model(image).detach().cpu())
-        emotion_predicted = str(self.emotions[predicted_label.numpy()])        
-        return emotion_predicted
 
     def inference(self, audio_path: str ="", face_landmarks: torch = None):
         """
@@ -88,6 +44,19 @@ class AudiGestNet(object):
         """
 
         melspectrogram, mfccs = self.process_audio(audio_path=audio_path)
+
+        print("Melspectrogram: ", melspectrogram.shape)
+        print("MFCC: ", mfccs.shape)
+
+        #Set up configuration and dataset
+        renderer = ModelRender(config=self.config)
+        #Render the video and save from data
+        renderer.render_sequences(self.model,self.device, melspectrogram, mfccs, face_landmarks,audio_path,"Videos")
+
+        audio_name = audio_path.split("\\")[-1].split(".")[-1]
+        temp_video_fname = os.path.join("Videos", f'{audio_name}_tmp.mp4')
+
+        return temp_video_fname
 
         melspectrogram.to(self.device)
         mfccs.to(self.device)
@@ -108,18 +77,18 @@ class AudiGestNet(object):
             audio_path: String containing the file path from the audio selected in the application.
 
         Returns:
-            Audio Melspectrogram sliced tensor [n_frames, 128, 30] and MFCC framed tensor [n_frames, 20, 30]
+            Audio Melspectrogram sliced tensor [n_frames, 1, 128, 30] and MFCC framed tensor [n_frames, 20, 30]
         """
-        signal = get_signal_mono(audio_path=audio_path, config=self.config)
+        signal = get_signal_mono(audio_path=audio_path, config=self.config['audio'])
 
-        melspec = get_sliced_melspectrogram(signal, config=self.config, n_fft=self.n_fft, hop_len=self.hop_len)
-        mfcc_list = process_framed_mfcc(signal, config=self.config, mfcc_transform=self.config)
+        melspec = get_sliced_melspectrogram(signal, config=self.config['audio'], n_fft=self.n_fft, hop_len=self.hop_len)
+        mfcc_list = process_framed_mfcc(signal, config=self.config['audio'], mfcc_transform=self.mfcc_transformation)
 
         n_frames = len(mfcc_list)
 
         melspec = melspec.repeat(n_frames,1,1)
         melspec = melspec.unsqueeze(1)
 
-        torch_mfcc = nn.FloatTensor(mfcc_list)
+        torch_mfcc = torch.stack(mfcc_list)
         torch_mfcc = torch_mfcc.permute(0, 2, 1)
         return melspec,torch_mfcc
