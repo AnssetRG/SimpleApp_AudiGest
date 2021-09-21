@@ -15,24 +15,24 @@ class ModelRender:
     def __init__(self, config: dict):
         self.template_mesh = Mesh(filename=config['files']['face'])
 
-    def render_sequences(self, model, device, melspectrogram_tensor, mfcc_tensor, landmarks_target, audio_path, out_folder, run_in_parallel=True):
+    def render_sequences(self, model, device, melspectrogram_tensor, mfcc_tensor, audio_path, out_folder, run_in_parallel=True):
         if run_in_parallel:
-            thread = threading.Thread(target=self._render_helper, args=(model, device, melspectrogram_tensor, mfcc_tensor, landmarks_target, audio_path, out_folder))
+            thread = threading.Thread(target=self._render_helper, args=(model, device, melspectrogram_tensor, mfcc_tensor, audio_path, out_folder))
             thread.start()
             thread.join()
         else:
-            self._render_helper(model, device, melspectrogram_tensor, mfcc_tensor, landmarks_target, audio_path, out_folder)
+            self._render_helper(model, device, melspectrogram_tensor, mfcc_tensor, audio_path, out_folder)
 
-    def _render_helper(self, model, device, melspectrogram_tensor, mfcc_tensor, landmarks_target, audio_path, out_folder):
+    def _render_helper(self, model, device, melspectrogram_tensor, mfcc_tensor, audio_path, out_folder):
             if not os.path.exists(out_folder):
                 os.makedirs(out_folder)
 
             audio_name = audio_path.split("\\")[-1].split(".")[-1]
             video_fname = os.path.join(out_folder, f'{audio_name}.mp4')
             temp_video_fname = os.path.join(out_folder, f'{audio_name}_tmp.mp4')
-            self._render_sequences_helper(model, device, video_fname, temp_video_fname, audio_path, melspectrogram_tensor, mfcc_tensor, landmarks_target)
+            self._render_sequences_helper(model, device, video_fname, temp_video_fname, audio_path, melspectrogram_tensor, mfcc_tensor)
 
-    def _render_sequences_helper(self, model, device, video_fname, temp_video_fname, audio_path, melspec, mfcc, target):
+    def _render_sequences_helper(self, model, device, video_fname, temp_video_fname, audio_path, melspec, mfcc):
         def add_image_text(img, text):
             img = img.copy()
             font = cv2.FONT_HERSHEY_SIMPLEX
@@ -46,10 +46,10 @@ class ModelRender:
         # tmp_video_file = tempfile.NamedTemporaryFile('w', suffix='.mp4', dir=os.path.dirname(video_fname))
         if int(cv2.__version__[0]) < 3:
             print('cv2 < 3')
-            writer = cv2.VideoWriter(temp_video_fname, cv2.cv.CV_FOURCC(*'mp4v'), 30, (1600, 800), True)
+            writer = cv2.VideoWriter(temp_video_fname, cv2.cv.CV_FOURCC(*'mp4v'), 30, (800, 800), True)
         else:
             print('cv2 >= 3')
-            writer = cv2.VideoWriter(temp_video_fname, cv2.VideoWriter_fourcc(*'mp4v'), 30, (1600, 800), True)
+            writer = cv2.VideoWriter(temp_video_fname, cv2.VideoWriter_fourcc(*'mp4v'), 30, (800, 800), True)
 
         model= model.to(device)
         model.eval()
@@ -65,14 +65,13 @@ class ModelRender:
             reconstructed, _ = model(melspec, mfcc, hidden)
             reconstructed = reconstructed.cpu().numpy()
 
-            target = target.numpy()
-            center = np.mean(target[0], axis=0)
+            center = np.mean(reconstructed[0], axis=0)
 
             for i_frame in range(num_frames):
-                gt_img = render_mesh_helper(Mesh(target[i_frame], self.template_mesh.f), center)
-                gt_img = add_image_text(gt_img, 'Original')
                 pred_img = render_mesh_helper(Mesh(reconstructed[i_frame], self.template_mesh.f), center)
                 pred_img = add_image_text(pred_img, 'Prediction')
-                img = np.hstack((gt_img, pred_img))
-                writer.write(img)
+                writer.write(pred_img)
             writer.release()
+
+        cmd = (f'ffmpeg -i {audio_path} -i {temp_video_fname} -vcodec h264 -ac 2 -channel_layout stereo -pix_fmt yuv420p {video_fname}').split()
+        call(cmd)

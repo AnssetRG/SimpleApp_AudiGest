@@ -36,7 +36,7 @@ class AudiGestNet(object):
         model.load("processed_data\training\AG_20")
         return model
 
-    def inference(self, audio_path: str ="", face_landmarks: torch = None):
+    def inference(self, audio_path: str ="", face_landmarks: torch.Tensor = None):
         """
         Inference function
         Args:
@@ -45,29 +45,16 @@ class AudiGestNet(object):
 
         melspectrogram, mfccs = self.process_audio(audio_path=audio_path)
 
-        print("Melspectrogram: ", melspectrogram.shape)
-        print("MFCC: ", mfccs.shape)
+        audio_name = audio_path.split("\\")[-1].split(".")[-1]
+        temp_video_fname = os.path.join("Videos", f'{audio_name}.mp4')
+
 
         #Set up configuration and dataset
         renderer = ModelRender(config=self.config)
         #Render the video and save from data
-        renderer.render_sequences(self.model,self.device, melspectrogram, mfccs, face_landmarks,audio_path,"Videos")
-
-        audio_name = audio_path.split("\\")[-1].split(".")[-1]
-        temp_video_fname = os.path.join("Videos", f'{audio_name}_tmp.mp4')
+        renderer.render_sequences(self.model,self.device, melspectrogram, mfccs,audio_path,"Videos")
 
         return temp_video_fname
-
-        melspectrogram.to(self.device)
-        mfccs.to(self.device)
-        self.model.to(self.device)
-
-        hidden = None
-
-        #model -> [n_frames,468,3]
-        predicted_landmarks, _ = self.model(melspectrogram,mfccs, hidden)
-
-        #TO DO: llamar la función de animación
 
     def process_audio(self, audio_path:str = ""):
         """

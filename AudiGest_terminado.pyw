@@ -141,6 +141,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
     #Función de la aplicación que llama la inferencia de la red
     def inferir_audio(self):
         video_path = self.net.inference(audio_path=parameters["audio_path"][-1])
+        print("VIDEO: ", video_path)
         show_video()
     
     def show_answer(self):
