@@ -70,9 +70,8 @@ class VideoWindow(QDialog):
         self.mediaPlayer.stateChanged.connect(self.mediastate_changed)
         self.mediaPlayer.positionChanged.connect(self.position_changed)
         self.mediaPlayer.durationChanged.connect(self.duration_changed)
-
         print(video_path)
-        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile('file://' + video_path)))
+        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(video_path)))
         self.playBtn.setEnabled(True)
  
     def play_video(self):
@@ -97,8 +96,8 @@ class VideoWindow(QDialog):
         self.mediaPlayer.setPosition(position)
 
 def show_video(video_path: str = os.path.join("Videos","TestVideo.wmv")):
-  player = VideoWindow(video_path)
-  player.exec()
+    player = VideoWindow(os.path.join(os.getcwd(),video_path))
+    player.exec()
 
 
 if __name__ == '__main__':
