@@ -68,7 +68,7 @@ class ProcesoCarga(QThread):
         self.setTerminationEnabled(True)
         self.contador = 0
         while self.contador <= 100:
-            time.sleep(0.1)
+            time.sleep(0.5)
             self.update_progress_bar.emit(self.contador)
             self.contador += 10
         self.update_progress_bar.emit(self.contador)

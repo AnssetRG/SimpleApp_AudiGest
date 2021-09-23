@@ -2,7 +2,7 @@ import torch
 from utils.model.AudiGest import AudiGest
 from utils.audio import get_mfcc_transform, get_signal_mono, get_sliced_melspectrogram, process_framed_mfcc
 from utils.config_creator import get_config
-from utils.rendering.final_mondel_render import ModelRender
+from utils.rendering.model_render import ModelRender
 import os
 
 class AudiGestNet(object):
