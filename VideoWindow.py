@@ -1,3 +1,4 @@
+from PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication, QDialog, QWidget, QPushButton, QHBoxLayout, QVBoxLayout, QLabel, \
     QSlider, QStyle, QSizePolicy, QFileDialog
 import sys
@@ -70,7 +71,6 @@ class VideoWindow(QDialog):
         self.mediaPlayer.stateChanged.connect(self.mediastate_changed)
         self.mediaPlayer.positionChanged.connect(self.position_changed)
         self.mediaPlayer.durationChanged.connect(self.duration_changed)
-        print(video_path)
         self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(video_path)))
         self.playBtn.setEnabled(True)
  
@@ -94,6 +94,11 @@ class VideoWindow(QDialog):
  
     def set_position(self, position):
         self.mediaPlayer.setPosition(position)
+    
+    def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
+        print("Closing")
+        self.mediaPlayer.stop()
+        return super().closeEvent(a0)
 
 def show_video(video_path: str = os.path.join("Videos","TestVideo.wmv")):
     player = VideoWindow(os.path.join(os.getcwd(),video_path))

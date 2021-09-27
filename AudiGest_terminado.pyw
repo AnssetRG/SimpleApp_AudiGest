@@ -52,7 +52,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.ui.btn_cargar.clicked.connect(self.set_new_file)
         self.ui.btn_procesar.clicked.connect(start_load) 
         self.ui.btn_procesar.clicked.connect(self.mensaje_boton)
-        self.ui.btn_procesar.clicked.connect(self.inferir_audio)
+        #self.ui.btn_procesar.clicked.connect(self.inferir_audio)
 
     def load_picture(self, image_path):
         pixmap = QPixmap()
