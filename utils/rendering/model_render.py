@@ -28,8 +28,8 @@ class ModelRender:
                 os.makedirs(out_folder)
 
             audio_name = audio_path.split("/")[-1].split(".")[0]
-            video_fname = os.path.join(out_folder, f'{audio_name}.mp4')
-            temp_video_fname = os.path.join(out_folder, f'{audio_name}_tmp.mp4')
+            video_fname = os.path.join(out_folder, f'{audio_name}.wmv')
+            temp_video_fname = os.path.join(out_folder, f'{audio_name}_tmp.wmv')
             self._render_sequences_helper(model, device, video_fname, temp_video_fname, audio_path, melspectrogram_tensor, mfcc_tensor)
 
     def _render_sequences_helper(self, model, device, video_fname, temp_video_fname, audio_path, melspec, mfcc):
@@ -46,10 +46,10 @@ class ModelRender:
         # tmp_video_file = tempfile.NamedTemporaryFile('w', suffix='.mp4', dir=os.path.dirname(video_fname))
         if int(cv2.__version__[0]) < 3:
             print('cv2 < 3')
-            writer = cv2.VideoWriter(temp_video_fname, cv2.cv.CV_FOURCC(*'mp4v'), 30, (800, 800), True)
+            writer = cv2.VideoWriter(temp_video_fname, cv2.cv.CV_FOURCC(*'wmv2'), 30, (800, 800), True)
         else:
             print('cv2 >= 3')
-            writer = cv2.VideoWriter(temp_video_fname, cv2.VideoWriter_fourcc(*'mp4v'), 30, (800, 800), True)
+            writer = cv2.VideoWriter(temp_video_fname, cv2.VideoWriter_fourcc(*'wmv2'), 30, (800, 800), True)
 
         model= model.to(device)
         model.eval()
@@ -73,5 +73,5 @@ class ModelRender:
                 writer.write(pred_img)
             writer.release()
 
-        cmd = (f'ffmpeg -i {audio_path} -i {temp_video_fname} -vcodec h264 -ac 2 -channel_layout stereo -pix_fmt yuv420p {video_fname}').split()
+        cmd = (f'ffmpeg -i {audio_path} -i {temp_video_fname} -ac 2 -channel_layout stereo -pix_fmt yuv420p {video_fname}').split()
         call(cmd)

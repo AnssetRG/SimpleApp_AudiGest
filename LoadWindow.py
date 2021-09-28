@@ -83,8 +83,6 @@ class ProcesoCarga(QThread):
 
 def start_load():
     dialogo = LoadWindow()
-    #t = ProcesoCarga(dialogo)
-    #t.start()        
     dialogo.exec()
 
 if __name__ == '__main__':

@@ -5,7 +5,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QMessageBox, QFileDialog,QGraphicsPixmapItem, QGraphicsScene
 from Dialogo import Dialogo
 from LoadWindow import start_load
-#from Model import AudiGestNet
+from Model import AudiGestNet
 from VideoWindow import show_video
 
 parameters = {
@@ -25,7 +25,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
         super().__init__()
         self.ui = Dialogo()
         self.ui.setupUi(self)
-        #self.net = AudiGestNet()
+        self.net = AudiGestNet()
         self.Audio_val = False
         self.Image_val = False
         self.current_answer = None
@@ -51,8 +51,8 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.ui.radio_btn3.toggled.connect(lambda: (self.set_image_file(self.images_values[2], self.ui.radio_btn3)))
         self.ui.btn_cargar.clicked.connect(self.set_new_file)
         self.ui.btn_procesar.clicked.connect(start_load) 
-        self.ui.btn_procesar.clicked.connect(self.mensaje_boton)
-        #self.ui.btn_procesar.clicked.connect(self.inferir_audio)
+        #self.ui.btn_procesar.clicked.connect(self.mensaje_boton)
+        self.ui.btn_procesar.clicked.connect(self.inferir_audio)
 
     def load_picture(self, image_path):
         pixmap = QPixmap()
@@ -140,9 +140,9 @@ class AudiGest_terminado(QDialog,QMainWindow):
     
     #Función de la aplicación que llama la inferencia de la red
     def inferir_audio(self):
-        #video_path = self.net.inference(audio_path=parameters["audio_path"][-1])
-        #print("VIDEO: ", video_path)
-        show_video()
+        video_path = self.net.inference(audio_path=parameters["audio_path"][-1])
+        print("VIDEO: ", video_path)
+        show_video(video_path)
     
     def show_answer(self):
         print(self.current_answer)
