@@ -49,7 +49,7 @@ Then go to env/lib/python3.9/site-packages/cv2/qt/ and delete **Plugins** folder
 
 
 FFMPEG
-======================================
+-------------------------------------
 Install FFMPEG:
 ```
 $ sudo apt install ffmpeg
