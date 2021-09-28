@@ -1,4 +1,5 @@
 import sys
+from PyQt5 import QtCore
 import librosa
 import os
 from PyQt5.QtGui import QPixmap
@@ -51,12 +52,13 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.ui.radio_btn3.toggled.connect(lambda: (self.set_image_file(self.images_values[2], self.ui.radio_btn3)))
         self.ui.btn_cargar.clicked.connect(self.set_new_file)
         self.ui.btn_procesar.clicked.connect(start_load) 
-        self.ui.btn_procesar.clicked.connect(self.mensaje_boton)
+        #self.ui.btn_procesar.clicked.connect(self.mensaje_boton)
         self.ui.btn_procesar.clicked.connect(self.inferir_audio)
 
     def load_picture(self, image_path):
         pixmap = QPixmap()
         pixmap.load(image_path)
+        pixmap = pixmap.scaled(128,128,QtCore.Qt.KeepAspectRatio)
         item = QGraphicsPixmapItem(pixmap)
         return item
                        
@@ -64,9 +66,9 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.scene = QGraphicsScene(self)
         self.scene2 = QGraphicsScene(self)
         self.scene3 = QGraphicsScene(self)
-        self.scene.addItem(self.load_picture(os.path.join("imagenes","cara1.png")))
-        self.scene2.addItem(self.load_picture(os.path.join("imagenes","cara2.png")))
-        self.scene3.addItem(self.load_picture(os.path.join("imagenes","cara3.png")))
+        self.scene.addItem(self.load_picture(os.path.join("imagenes","Face_1.png")))
+        self.scene2.addItem(self.load_picture(os.path.join("imagenes","Face_2.png")))
+        self.scene3.addItem(self.load_picture(os.path.join("imagenes","Face_3.png")))
         self.ui.gpc_imagen1.setScene(self.scene)
         self.ui.gpc_imagen2.setScene(self.scene2)
         self.ui.gpc_imagen3.setScene(self.scene3)
@@ -142,7 +144,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
     def inferir_audio(self):
         video_path = self.net.inference(audio_path=parameters["audio_path"][-1])
         print("VIDEO: ", video_path)
-        show_video()
+        show_video(video_path)
     
     def show_answer(self):
         print(self.current_answer)

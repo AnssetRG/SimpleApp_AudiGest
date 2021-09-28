@@ -83,11 +83,11 @@ class Dialogo(object):
         #Imagen 1
         self.gpc_imagen1 = QtWidgets.QGraphicsView(Dialogo)
         self.gpc_imagen1.setGeometry(QtCore.QRect(30, 200, 150, 150))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.gpc_imagen1.sizePolicy().hasHeightForWidth())
-        self.gpc_imagen1.setSizePolicy(sizePolicy)
+        # sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        # sizePolicy.setHorizontalStretch(0)
+        # sizePolicy.setVerticalStretch(0)
+        # sizePolicy.setHeightForWidth(self.gpc_imagen1.sizePolicy().hasHeightForWidth())
+        # self.gpc_imagen1.setSizePolicy(sizePolicy)
         self.gpc_imagen1.setObjectName("gpc_imagen1")
 
         #Imagen 2

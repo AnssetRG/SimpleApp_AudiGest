@@ -35,7 +35,7 @@ def load_torch(file_name: str) -> torch.Tensor:
             The tensor in serialized file.
     """
     file_path = _check_file_exists(file_name)
-
+    print("File path: ", file_path)
     return torch.load(file_path)
 
 

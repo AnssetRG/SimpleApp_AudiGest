@@ -1,3 +1,4 @@
+from os import close
 import time
 from PyQt5.QtWidgets import QDialog
 from PyQt5.QtCore import QThread, pyqtSignal
@@ -57,10 +58,16 @@ class LoadWindow(QDialog):
             self.cerrar_aplicacion()
 
     def cerrar_aplicacion(self):
-        self.processClass.terminate()
+        while self.processClass.isRunning():
+            self.processClass.terminate()
         self.close()
 
+    def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
+        if self.processClass.isRunning():
+            a0.ignore()
+
 class ProcesoCarga(QThread):
+        
 
     update_progress_bar = pyqtSignal(int)
 
@@ -68,7 +75,7 @@ class ProcesoCarga(QThread):
         self.setTerminationEnabled(True)
         self.contador = 0
         while self.contador <= 100:
-            time.sleep(0.1)
+            time.sleep(0.5)
             self.update_progress_bar.emit(self.contador)
             self.contador += 10
         self.update_progress_bar.emit(self.contador)
@@ -76,8 +83,6 @@ class ProcesoCarga(QThread):
 
 def start_load():
     dialogo = LoadWindow()
-    t = ProcesoCarga(dialogo)
-    t.start()        
     dialogo.exec()
 
 if __name__ == '__main__':

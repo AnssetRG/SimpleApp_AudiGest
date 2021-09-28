@@ -2,7 +2,7 @@ import torch
 from utils.model.AudiGest import AudiGest
 from utils.audio import get_mfcc_transform, get_signal_mono, get_sliced_melspectrogram, process_framed_mfcc
 from utils.config_creator import get_config
-from utils.rendering.final_mondel_render import ModelRender
+from utils.rendering.model_render import ModelRender
 import os
 
 class AudiGestNet(object):
@@ -30,7 +30,6 @@ class AudiGestNet(object):
         """
         Initialize AudiGest net and load weights
         """
-        print(type(self.config))
         model = AudiGest(self.config)
         model.to(self.device)
         model.load(20)
@@ -47,7 +46,7 @@ class AudiGestNet(object):
 
         audio_name = audio_path.split("/")[-1].split(".")[0]
         print(audio_name)
-        temp_video_fname = os.path.join("Videos", f'{audio_name}.mp4')
+        video_fname = os.path.join("Videos", f'{audio_name}.wmv')
 
 
         #Set up configuration and dataset
@@ -55,7 +54,7 @@ class AudiGestNet(object):
         #Render the video and save from data
         renderer.render_sequences(self.model,self.device, melspectrogram, mfccs,audio_path, "Videos")
 
-        return temp_video_fname
+        return video_fname
 
     def process_audio(self, audio_path:str = ""):
         """
