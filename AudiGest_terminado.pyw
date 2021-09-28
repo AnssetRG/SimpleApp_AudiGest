@@ -1,4 +1,5 @@
 import sys
+from PyQt5 import QtCore
 import librosa
 import os
 from PyQt5.QtGui import QPixmap
@@ -57,6 +58,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
     def load_picture(self, image_path):
         pixmap = QPixmap()
         pixmap.load(image_path)
+        pixmap = pixmap.scaled(128,128,QtCore.Qt.KeepAspectRatio)
         item = QGraphicsPixmapItem(pixmap)
         return item
                        
@@ -64,9 +66,9 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.scene = QGraphicsScene(self)
         self.scene2 = QGraphicsScene(self)
         self.scene3 = QGraphicsScene(self)
-        self.scene.addItem(self.load_picture(os.path.join("imagenes","cara1.png")))
-        self.scene2.addItem(self.load_picture(os.path.join("imagenes","cara2.png")))
-        self.scene3.addItem(self.load_picture(os.path.join("imagenes","cara3.png")))
+        self.scene.addItem(self.load_picture(os.path.join("imagenes","Face_1.png")))
+        self.scene2.addItem(self.load_picture(os.path.join("imagenes","Face_2.png")))
+        self.scene3.addItem(self.load_picture(os.path.join("imagenes","Face_3.png")))
         self.ui.gpc_imagen1.setScene(self.scene)
         self.ui.gpc_imagen2.setScene(self.scene2)
         self.ui.gpc_imagen3.setScene(self.scene3)
