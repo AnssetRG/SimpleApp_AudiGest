@@ -29,12 +29,15 @@ MANIFEST
 
 # Processed dataset
 processed_data/*
-!processed_data/*.csv
-!processed_data/*.pkl
+!processed_data/*.obj
 !processed_data/training/
 
 # Data folder
 Data/*
+
+# Video folder
+Videos/*
+!Videos/TestVideo.wmv
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
