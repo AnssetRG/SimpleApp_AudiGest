@@ -6,6 +6,13 @@ For instalation use the requirements.txt on a new Virtual Enviroment with Python
 $ pip install -r requirements.txt
 ```
 
+Running AudiGest
+================
+```
+$ python AudiGest_terminado.pyw
+```
+
+
 Installing Other Dependencies
 =============================
 
