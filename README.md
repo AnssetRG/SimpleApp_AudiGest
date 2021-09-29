@@ -27,12 +27,12 @@ $ sudo apt-get install libboost-dev
 $ sudo apt-get install cmake
 ```
 
-Then inmesh/mesh/cmake/thirdparty.cmake, fixed line 29 by writing "()" for "print":
+Then in mesh/mesh/cmake/thirdparty.cmake, fixed line 29 by writing "()" for "print":
 ```
 COMMAND ${PYTHON_EXECUTABLE} -c "import numpy; print(numpy.get_include())"
 ```
 
-Finally on mesh/ run the below command:
+Finally on the main directory of the repository (mesh/) run the below command:
 ```
 $ make all
 ```
@@ -45,7 +45,7 @@ If when running the main window **AudiGest_terminado.pyw** appears some errors, 
 $ sudo apt-get install --reinstall libxcb-xinerama0
 ```
 
-Then go to env/lib/python3.9/site-packages/cv2/qt/ and delete **Plugins** folder.
+Then go to your enviroment directory and search env/lib/python3.9/site-packages/cv2/qt/ then delete **Plugins** folder.
 
 
 FFMPEG
