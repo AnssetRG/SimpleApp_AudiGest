@@ -7,6 +7,8 @@ from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtGui import QIcon, QPalette
 from PyQt5.QtCore import Qt, QUrl
 import os
+
+from PyQt5.sip import delete
  
 class VideoWindow(QDialog):
     def __init__(self, video_path: str = None):
@@ -21,11 +23,26 @@ class VideoWindow(QDialog):
         p =self.palette()
         p.setColor(QPalette.Window, Qt.black)
         self.setPalette(p)
+
+        self.mediaPlayer = None
+        self.videowidget = None
  
         self.init_ui(video_path)
 
-        self.show()
- 
+        # self.show()
+        # self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
+        # self.videowidget = QVideoWidget()
+
+        # self.vboxLayout = QVBoxLayout()
+        # self.vboxLayout.addWidget(self.videowidget)
+
+        # self.setLayout(self.vboxLayout)
+
+        # self.mediaPlayer.setVideoOutput(self.videowidget) #Violación de segmento (`core' generado)
+        # self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(video_path)))
+        # self.mediaPlayer.play()
+
+        #print(self.videowidget.mediaObject() == self.mediaPlayer)
  
     def init_ui(self, video_path: str = None):
  
@@ -96,14 +113,12 @@ class VideoWindow(QDialog):
         self.mediaPlayer.setPosition(position)
     
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
-        print("Closing")
-        self.mediaPlayer.stop()
+        del self.mediaPlayer, self.videowidget
         return super().closeEvent(a0)
 
 def show_video(video_path: str = os.path.join("Videos","TestVideo.wmv")):
     player = VideoWindow(os.path.join(os.getcwd(),video_path))
     player.exec()
-
 
 if __name__ == '__main__':
   app = QApplication(sys.argv)

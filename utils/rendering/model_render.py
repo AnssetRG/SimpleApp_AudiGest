@@ -14,25 +14,30 @@ from utils.rendering.rendering import render_mesh_helper
 class ModelRender:
     def __init__(self, config: dict):
         self.template_mesh = Mesh(filename=config['files']['face'])
+        print("model_render.py - TEMPLATE_MESH: ", self.template_mesh)
+        #self.template_mesh = None
 
-    def render_sequences(self, model, device, melspectrogram_tensor, mfcc_tensor, audio_path, out_folder, run_in_parallel=True):
+    def render_sequences(self, model, device, melspectrogram_tensor, mfcc_tensor, audio_path, out_folder, run_in_parallel=True, video_path:str = None, landmarks: torch.tensor = None):
+        #self.template_mesh = Mesh(filename=face_path)
         if run_in_parallel:
-            thread = threading.Thread(target=self._render_helper, args=(model, device, melspectrogram_tensor, mfcc_tensor, audio_path, out_folder))
+            thread = threading.Thread(target=self._render_helper, args=(model, device, melspectrogram_tensor, mfcc_tensor, audio_path, out_folder, landmarks, video_path))
             thread.start()
             thread.join()
         else:
-            self._render_helper(model, device, melspectrogram_tensor, mfcc_tensor, audio_path, out_folder)
+            self._render_helper(model, device, melspectrogram_tensor, mfcc_tensor, audio_path, out_folder, landmarks, video_path)
 
-    def _render_helper(self, model, device, melspectrogram_tensor, mfcc_tensor, audio_path, out_folder):
+    def _render_helper(self, model, device, melspectrogram_tensor, mfcc_tensor, audio_path, out_folder, landmarks: torch.tensor = None,  video_path:str = None):
             if not os.path.exists(out_folder):
                 os.makedirs(out_folder)
 
-            audio_name = audio_path.split("/")[-1].split(".")[0]
-            video_fname = os.path.join(out_folder, f'{audio_name}.wmv')
-            temp_video_fname = os.path.join(out_folder, f'{audio_name}_tmp.wmv')
-            self._render_sequences_helper(model, device, video_fname, temp_video_fname, audio_path, melspectrogram_tensor, mfcc_tensor)
+            #audio_name = audio_path.split("/")[-1].split(".")[0]
+            #video_fname = os.path.join(out_folder, f'{audio_name}.wmv')
+            video_fname = f'{video_path}.wmv'
+            #temp_video_fname = os.path.join(out_folder, f'{audio_name}_tmp.wmv')
+            temp_video_fname = f'{video_path}_tmp.wmv'
+            self._render_sequences_helper(model, device, video_fname, temp_video_fname, audio_path, melspectrogram_tensor, mfcc_tensor, landmarks)
 
-    def _render_sequences_helper(self, model, device, video_fname, temp_video_fname, audio_path, melspec, mfcc):
+    def _render_sequences_helper(self, model, device, video_fname, temp_video_fname, audio_path, melspec, mfcc, base_target):
         def add_image_text(img, text):
             img = img.copy()
             font = cv2.FONT_HERSHEY_SIMPLEX
@@ -62,13 +67,16 @@ class ModelRender:
             # mfcc = mfcc.permute(0, 2, 1)
             mfcc = mfcc.to(device)
 
-            reconstructed, _ = model(melspec, mfcc, hidden)
+            base_target = base_target.to(device)
+
+            reconstructed, _ = model(melspec, mfcc, base_target, hidden)
             reconstructed = reconstructed.cpu().numpy()
 
             center = np.mean(reconstructed[0], axis=0)
 
             for i_frame in range(num_frames):
                 pred_img = render_mesh_helper(Mesh(reconstructed[i_frame], self.template_mesh.f), center)
+                print("model_render.py - PRED_IMG: ", pred_img.shape)
                 pred_img = add_image_text(pred_img, 'Prediction')
                 writer.write(pred_img)
             writer.release()

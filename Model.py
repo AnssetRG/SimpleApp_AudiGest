@@ -4,6 +4,8 @@ from utils.audio import get_mfcc_transform, get_signal_mono, get_sliced_melspect
 from utils.config_creator import get_config
 from utils.rendering.model_render import ModelRender
 import os
+import numpy as np
+from datetime import datetime
 
 class AudiGestNet(object):
     """
@@ -32,31 +34,32 @@ class AudiGestNet(object):
         """
         model = AudiGest(self.config)
         model.to(self.device)
-        model.load(20)
+        model.load(10)
         return model
 
-    def inference(self, audio_path: str ="", face_landmarks: torch.Tensor = None):
+    def inference(self, audio_path: str ="", face_obj: str = None, face_landmarks: str = None):
         """
         Inference function
         Args:
             audio_path: String containing the file path from the audio selected in the application.
         """
+        melspectrogram, mfccs, base_target = self.process_audio(audio_path=audio_path, landmarks_path=face_landmarks)
 
-        melspectrogram, mfccs = self.process_audio(audio_path=audio_path)
+        current_date_time = datetime.now()
 
         audio_name = audio_path.split("/")[-1].split(".")[0]
         print(audio_name)
-        video_fname = os.path.join("Videos", f'{audio_name}.wmv')
+        video_fname = os.path.join("Videos", f'{audio_name}_{current_date_time}')
 
 
         #Set up configuration and dataset
         renderer = ModelRender(config=self.config)
         #Render the video and save from data
-        renderer.render_sequences(self.model,self.device, melspectrogram, mfccs,audio_path, "Videos")
-
+        renderer.render_sequences(self.model,self.device, melspectrogram, mfccs,audio_path, "Videos", video_path=video_fname, landmarks=base_target)
+        video_fname = f'{video_fname}.wmv'
         return video_fname
 
-    def process_audio(self, audio_path:str = ""):
+    def process_audio(self, audio_path:str = "", landmarks_path: str = None):
         """
         Load and audio from an string path into a torch tensor. Then, it is used for extracting the melspectrogram and mfcc of the audio according Config parameters.
 
@@ -73,9 +76,20 @@ class AudiGestNet(object):
 
         n_frames = len(mfcc_list)
 
+        base_target = np.load(landmarks_path)
+        base_target = torch.from_numpy(base_target).type(torch.float32)
+        base_target = base_target.repeat(n_frames, 1, 1)
+
         melspec = melspec.repeat(n_frames,1,1)
         melspec = melspec.unsqueeze(1)
 
         torch_mfcc = torch.stack(mfcc_list)
         torch_mfcc = torch_mfcc.permute(0, 2, 1)
-        return melspec,torch_mfcc
+
+        #print("Melspec Shape: ", melspec.shape)
+        #print("Torch MFCC Shape: ", torch_mfcc.shape)
+        #print("Base Target Shape: ", base_target.shape)
+
+        #raise Exception("STOP >:v")
+
+        return melspec,torch_mfcc,base_target

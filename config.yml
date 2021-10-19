@@ -11,15 +11,21 @@ files:
   face: processed_data/face.obj
   raw_data_root: MEAD
   subject_paths: processed_data/sbj_data_paths.pkl
-  test_csv: processed_data/test_dataset.csv
-  test_mini: processed_data/test_mini.csv
-  test_root: processed_data/test
-  train_csv: processed_data/train_dataset.csv
-  train_mini: processed_data/train_mini.csv
-  train_root: processed_data/train
+  test:
+    csv: processed_data/test_dataset.csv
+    mini: processed_data/test_mini.csv
+    root: processed_data/test
+  train:
+    csv: processed_data/train_dataset.csv
+    mini: processed_data/train_mini.csv
+    root: processed_data/train
+  val:
+    csv: processed_data/val_dataset.csv
+    mini: processed_data/val_mini.csv
+    root: processed_data/val
 model:
   fc:
-    drop: 0.5
+    drop: 0.7
     hidden_1: 256
     hidden_2: 128
     hidden_3: 256
@@ -28,9 +34,11 @@ model:
   lstm:
     hidden_dim: 16
     num_layers: 1
+  velocity_weight: 10.0
   vertex_num: 468
 training:
   batch_size: 64
+  consecutive_seqs: 2
   decay_rate: 1.0
-  epochs: 10
+  epochs: 20
   learning_rate: 0.0001

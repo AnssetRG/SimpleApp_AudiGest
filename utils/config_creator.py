@@ -1,3 +1,5 @@
+
+  
 import os
 import yaml
 try:
@@ -17,12 +19,21 @@ def create_default_config():
             'raw_data_root': 'MEAD',
             'data_root': 'processed_data',
             'subject_paths': 'processed_data/sbj_data_paths.pkl',
-            'train_root': 'processed_data/train',
-            'test_root': 'processed_data/test',
-            'train_csv': 'processed_data/train_dataset.csv',
-            'test_csv': 'processed_data/test_dataset.csv',
-            'train_mini': 'processed_data/train_mini.csv',
-            'test_mini': 'processed_data/test_mini.csv',
+            'train': {
+                'root': 'processed_data/train',
+                'csv': 'processed_data/train_dataset.csv',
+                'mini': 'processed_data/train_mini.csv',
+            },
+            'val': {
+                'root': 'processed_data/val',
+                'csv': 'processed_data/val_dataset.csv',
+                'mini': 'processed_data/val_mini.csv',
+            },
+            'test': {
+                'root': 'processed_data/test',
+                'csv': 'processed_data/test_dataset.csv',
+                'mini': 'processed_data/test_mini.csv',
+            },
             'face': 'processed_data/face.obj'
         },
         'audio': {
@@ -45,15 +56,17 @@ def create_default_config():
                 'hidden_2': 128,
                 'hidden_3': 256,
                 'hidden_4': 512,
-                'drop': 0.5
+                'drop': 0.7
             },
-            'vertex_num': 468
+            'vertex_num': 468,
+            'velocity_weight': 10.0
         },
         'training': {
             'batch_size': 64,
             'learning_rate': 1e-4,
-            'epochs': 10,
-            'decay_rate': 1.0
+            'epochs': 40,
+            'decay_rate': 1.0,
+            'consecutive_seqs': 2
         }
     }
 
@@ -69,6 +82,7 @@ def get_config():
 
     with open('config.yml', 'r') as yml_file:
         return yaml.load(yml_file, Loader=Loader)
+
 
 if __name__ == '__main__':
     create_default_config()

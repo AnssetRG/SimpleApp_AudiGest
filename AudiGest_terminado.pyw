@@ -32,9 +32,16 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.current_answer = None
 
         #Array que guardará valores referente a cada imagen, por el momento es un array de string
-        self.images_values = ["Image 1", "Image 2" ,"Image 3"]
+        self.face_obj = []
+        for item in os.listdir('Objects'):
+            self.face_obj.append(os.path.join('Objects',item))
+
+        self.face_landmarks = []
+        for item in os.listdir('Landmarks'):
+            self.face_landmarks.append(os.path.join('Landmarks',item))
         #Valor actual que se usará como imagen, cambia conforme se seleccione una nueva imagen
-        self.image_current_value = None
+        self.face_obj_current_value = None
+        self.face_landmarks_current_value = None
 
         #carga imagenes
         self.imagenes()
@@ -47,9 +54,9 @@ class AudiGest_terminado(QDialog,QMainWindow):
 
         #función de botones
         #a los botones se le está añadiendo la función con 2 parámetros: el valor que guarda la imagen y el botón que está siendo interactuado
-        self.ui.radio_btn1.toggled.connect(lambda: (self.set_image_file(self.images_values[0], self.ui.radio_btn1)))
-        self.ui.radio_btn2.toggled.connect(lambda: (self.set_image_file(self.images_values[1], self.ui.radio_btn2)))
-        self.ui.radio_btn3.toggled.connect(lambda: (self.set_image_file(self.images_values[2], self.ui.radio_btn3)))
+        self.ui.radio_btn1.toggled.connect(lambda: (self.set_image_file(self.face_obj[0], self.face_landmarks[0], self.ui.radio_btn1)))
+        self.ui.radio_btn2.toggled.connect(lambda: (self.set_image_file(self.face_obj[1], self.face_landmarks[1], self.ui.radio_btn2)))
+        self.ui.radio_btn3.toggled.connect(lambda: (self.set_image_file(self.face_obj[2], self.face_landmarks[2], self.ui.radio_btn3)))
         self.ui.btn_cargar.clicked.connect(self.set_new_file)
         self.ui.btn_procesar.clicked.connect(start_load) 
         #self.ui.btn_procesar.clicked.connect(self.mensaje_boton)
@@ -67,8 +74,8 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.scene2 = QGraphicsScene(self)
         self.scene3 = QGraphicsScene(self)
         self.scene.addItem(self.load_picture(os.path.join("imagenes","Face_1.png")))
-        self.scene2.addItem(self.load_picture(os.path.join("imagenes","Face_2.png")))
-        self.scene3.addItem(self.load_picture(os.path.join("imagenes","Face_3.png")))
+        self.scene2.addItem(self.load_picture(os.path.join("imagenes","M012_actor.png")))
+        self.scene3.addItem(self.load_picture(os.path.join("imagenes","W015_actor.png")))
         self.ui.gpc_imagen1.setScene(self.scene)
         self.ui.gpc_imagen2.setScene(self.scene2)
         self.ui.gpc_imagen3.setScene(self.scene3)
@@ -117,11 +124,13 @@ class AudiGest_terminado(QDialog,QMainWindow):
         widgets["audio_file"][-1].setText(parameters["audio"][-1])
     
     #Función de cuando es interactuado el botón de las imágenes, solo si se marca entonces se guarda los valores
-    def set_image_file(self, image, button):
+    def set_image_file(self, face_obj, landmark, button):
         if button.isChecked():
             self.Image_val = True
             self.activar_boton_procesar()
-            self.image_current_value = image
+            self.face_obj_current_value = face_obj
+            self.face_landmarks_current_value = landmark
+            print(self.face_obj_current_value)
     
     def alert_window(self):
         msg = QMessageBox()
@@ -138,11 +147,12 @@ class AudiGest_terminado(QDialog,QMainWindow):
 
     #El mensaje ahora muestra la información del valor guardado actual (referente a la imagen seleccionada)
     def mensaje_boton(self):
-        print("La %s ha sido seleccionada" % self.image_current_value)
+        print("La %s ha sido seleccionada" % self.face_obj_current_value)
     
     #Función de la aplicación que llama la inferencia de la red
     def inferir_audio(self):
-        video_path = self.net.inference(audio_path=parameters["audio_path"][-1])
+        video_path = self.net.inference(audio_path=parameters["audio_path"][-1], face_obj=self.face_obj_current_value, face_landmarks=self.face_landmarks_current_value)
+        #video_path = os.path.join("Videos","TestVideo.wmv")
         print("VIDEO: ", video_path)
         show_video(video_path)
     
