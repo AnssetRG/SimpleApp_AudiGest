@@ -58,8 +58,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.ui.radio_btn2.toggled.connect(lambda: (self.set_image_file(self.face_obj[1], self.face_landmarks[1], self.ui.radio_btn2)))
         self.ui.radio_btn3.toggled.connect(lambda: (self.set_image_file(self.face_obj[2], self.face_landmarks[2], self.ui.radio_btn3)))
         self.ui.btn_cargar.clicked.connect(self.set_new_file)
-        self.ui.btn_procesar.clicked.connect(start_load) 
-        #self.ui.btn_procesar.clicked.connect(self.mensaje_boton)
+        self.ui.btn_procesar.clicked.connect(start_load)
         self.ui.btn_procesar.clicked.connect(self.inferir_audio)
 
     def load_picture(self, image_path):
@@ -130,7 +129,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
             self.activar_boton_procesar()
             self.face_obj_current_value = face_obj
             self.face_landmarks_current_value = landmark
-            print(self.face_obj_current_value)
+            #print(self.face_obj_current_value)
     
     def alert_window(self):
         msg = QMessageBox()
@@ -144,16 +143,10 @@ class AudiGest_terminado(QDialog,QMainWindow):
     def activar_boton_procesar(self):
         if self.Audio_val and self.Image_val:
             self.ui.btn_procesar.setEnabled(True)  
-
-    #El mensaje ahora muestra la información del valor guardado actual (referente a la imagen seleccionada)
-    def mensaje_boton(self):
-        print("La %s ha sido seleccionada" % self.face_obj_current_value)
     
     #Función de la aplicación que llama la inferencia de la red
     def inferir_audio(self):
         video_path = self.net.inference(audio_path=parameters["audio_path"][-1], face_obj=self.face_obj_current_value, face_landmarks=self.face_landmarks_current_value)
-        #video_path = os.path.join("Videos","TestVideo.wmv")
-        print("VIDEO: ", video_path)
         show_video(video_path)
     
     def show_answer(self):

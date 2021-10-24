@@ -48,8 +48,7 @@ class AudiGestNet(object):
         current_date_time = datetime.now()
 
         audio_name = audio_path.split("/")[-1].split(".")[0]
-        print(audio_name)
-        video_fname = os.path.join("Videos", f'{audio_name}_{current_date_time}')
+        video_fname = os.path.join("Videos", f'{audio_name}_{current_date_time.date()}_{current_date_time.hour}_{current_date_time.minute}_{current_date_time.second}')
 
 
         #Set up configuration and dataset
@@ -85,10 +84,6 @@ class AudiGestNet(object):
 
         torch_mfcc = torch.stack(mfcc_list)
         torch_mfcc = torch_mfcc.permute(0, 2, 1)
-
-        #print("Melspec Shape: ", melspec.shape)
-        #print("Torch MFCC Shape: ", torch_mfcc.shape)
-        #print("Base Target Shape: ", base_target.shape)
 
         #raise Exception("STOP >:v")
 

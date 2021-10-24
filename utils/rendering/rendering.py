@@ -13,7 +13,7 @@ For comments or questions, please email us at voca@tue.mpg.de
 
 from __future__ import division
 import os
-os.environ['PYOPENGL_PLATFORM'] = 'egl' # Uncommnet this line while running remotely
+#os.environ['PYOPENGL_PLATFORM'] = 'egl' # Uncommnet this line while running remotely
 import cv2
 import pyrender
 import trimesh
@@ -77,7 +77,6 @@ def render_mesh_helper(mesh, t_center, rot=np.zeros(3), tex_img=None, v_colors=N
     if not texture_rendering:
         tri_mesh = trimesh.Trimesh(vertices=mesh_copy.v, faces=mesh_copy.f, vertex_colors=rgb_per_v)
         render_mesh = pyrender.Mesh.from_trimesh(tri_mesh, smooth=False)
-        print("Rendering.py - TRI_MESH: ", tri_mesh)
 
     scene = pyrender.Scene(ambient_light=[.2, .2, .2], bg_color=[255, 255, 255])
     camera = pyrender.IntrinsicsCamera(fx=camera_params['f'][0],
@@ -118,13 +117,11 @@ def render_mesh_helper(mesh, t_center, rot=np.zeros(3), tex_img=None, v_colors=N
     scene.add(light, pose=light_pose.copy())
 
     flags = pyrender.RenderFlags.SKIP_CULL_FACES
+
     try:
         r = pyrender.OffscreenRenderer(viewport_width=frustum['width'], viewport_height=frustum['height'])
-        print("Rendering.py - R: ", r)
         color, _ = r.render(scene, flags=flags)
-        print("Rendering.py - COLOR: ", color.shape)
     except Exception as e:
-        print('pyrender: Failed rendering frame')
         color = np.zeros((frustum['height'], frustum['width'], 3), dtype='uint8')
 
     return color[:, ::-1]

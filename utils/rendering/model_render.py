@@ -14,7 +14,6 @@ from utils.rendering.rendering import render_mesh_helper
 class ModelRender:
     def __init__(self, config: dict):
         self.template_mesh = Mesh(filename=config['files']['face'])
-        print("model_render.py - TEMPLATE_MESH: ", self.template_mesh)
         #self.template_mesh = None
 
     def render_sequences(self, model, device, melspectrogram_tensor, mfcc_tensor, audio_path, out_folder, run_in_parallel=True, video_path:str = None, landmarks: torch.tensor = None):
@@ -30,10 +29,7 @@ class ModelRender:
             if not os.path.exists(out_folder):
                 os.makedirs(out_folder)
 
-            #audio_name = audio_path.split("/")[-1].split(".")[0]
-            #video_fname = os.path.join(out_folder, f'{audio_name}.wmv')
             video_fname = f'{video_path}.wmv'
-            #temp_video_fname = os.path.join(out_folder, f'{audio_name}_tmp.wmv')
             temp_video_fname = f'{video_path}_tmp.wmv'
             self._render_sequences_helper(model, device, video_fname, temp_video_fname, audio_path, melspectrogram_tensor, mfcc_tensor, landmarks)
 
@@ -76,7 +72,6 @@ class ModelRender:
 
             for i_frame in range(num_frames):
                 pred_img = render_mesh_helper(Mesh(reconstructed[i_frame], self.template_mesh.f), center)
-                print("model_render.py - PRED_IMG: ", pred_img.shape)
                 pred_img = add_image_text(pred_img, 'Prediction')
                 writer.write(pred_img)
             writer.release()
