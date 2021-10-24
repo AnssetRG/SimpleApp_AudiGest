@@ -29,8 +29,8 @@ class ModelRender:
             if not os.path.exists(out_folder):
                 os.makedirs(out_folder)
 
-            video_fname = f'{video_path}.mp4'
-            temp_video_fname = f'{video_path}_tmp.mp4'
+            video_fname = f'{video_path}.wmv'
+            temp_video_fname = f'{video_path}_tmp.wmv'
             self._render_sequences_helper(model, device, video_fname, temp_video_fname, audio_path, melspectrogram_tensor, mfcc_tensor, landmarks)
 
     def _render_sequences_helper(self, model, device, video_fname, temp_video_fname, audio_path, melspec, mfcc, base_target):
@@ -47,10 +47,10 @@ class ModelRender:
         # tmp_video_file = tempfile.NamedTemporaryFile('w', suffix='.mp4', dir=os.path.dirname(video_fname))
         if int(cv2.__version__[0]) < 3:
             print('cv2 < 3')
-            writer = cv2.VideoWriter(temp_video_fname, cv2.cv.CV_FOURCC(*'mp4v'), 30, (800, 800), True)
+            writer = cv2.VideoWriter(temp_video_fname, cv2.cv.CV_FOURCC(*'wmv2'), 30, (800, 800), True)
         else:
             print('cv2 >= 3')
-            writer = cv2.VideoWriter(temp_video_fname, cv2.VideoWriter_fourcc(*'mp4v'), 30, (800, 800), True)
+            writer = cv2.VideoWriter(temp_video_fname, cv2.VideoWriter_fourcc(*'wmv2'), 30, (800, 800), True)
 
         model= model.to(device)
         model.eval()
