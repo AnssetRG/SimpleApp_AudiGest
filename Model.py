@@ -1,6 +1,8 @@
+from librosa.feature.spectral import mfcc
 import torch
+import torch.nn.functional as F
 from utils.model.AudiGest import AudiGest
-from utils.audio import get_mfcc_transform, get_signal_mono, get_sliced_melspectrogram, process_framed_mfcc
+from utils.audio import AudioFeatureExtractor
 from utils.config_creator import get_config
 from utils.rendering.model_render import ModelRender
 import os
@@ -20,7 +22,7 @@ class AudiGestNet(object):
 
         self.n_fft = int(self.config['audio']['window_len'] * self.config['audio']['sample_rate'])
         self.hop_len = int(self.config['audio']['sample_interval'] * self.config['audio']['sample_rate'])
-        self.mfcc_transformation = get_mfcc_transform(self.config['audio']['sample_rate'], self.config['audio']['n_mfcc'], n_fft=self.n_fft, hop_len=self.hop_len)
+        self.feature_extractor = AudioFeatureExtractor(self.config['audio'])
 
     def set_device(self):
         """
@@ -34,7 +36,7 @@ class AudiGestNet(object):
         """
         model = AudiGest(self.config)
         model.to(self.device)
-        model.load(10)
+        model.load(20)
         return model
 
     def inference(self, audio_path: str ="", face_obj: str = None, face_landmarks: str = None):
@@ -68,22 +70,24 @@ class AudiGestNet(object):
         Returns:
             Audio Melspectrogram sliced tensor [n_frames, 1, 128, 30] and MFCC framed tensor [n_frames, 20, 30]
         """
-        signal = get_signal_mono(audio_path=audio_path, config=self.config['audio'])
 
-        melspec = get_sliced_melspectrogram(signal, config=self.config['audio'], n_fft=self.n_fft, hop_len=self.hop_len)
-        mfcc_list = process_framed_mfcc(signal, config=self.config['audio'], mfcc_transform=self.mfcc_transformation)
+        _, mfcc = self.feature_extractor.get_melspec_and_mfccs(audio_path=audio_path,use_delta=True)
+        mfcc_list = self.feature_extractor.process_framed_mfcc(mfcc, use_delta=True)
 
-        n_frames = len(mfcc_list)
+        n_frames = mfcc_list.shape[0]
+
+        #melspec = melspec.repeat(n_frames,1,1)
+        #melspec = melspec.unsqueeze(1)
+        melspec = torch.tensor(3)
+        melspec = melspec.repeat(n_frames)
+        melspec = F.one_hot(melspec,8)
+
+        torch_mfcc = torch.from_numpy(mfcc_list).type(torch.float32)
+        torch_mfcc = torch_mfcc.permute(0, 2, 1)
 
         base_target = np.load(landmarks_path)
         base_target = torch.from_numpy(base_target).type(torch.float32)
         base_target = base_target.repeat(n_frames, 1, 1)
-
-        melspec = melspec.repeat(n_frames,1,1)
-        melspec = melspec.unsqueeze(1)
-
-        torch_mfcc = torch.stack(mfcc_list)
-        torch_mfcc = torch_mfcc.permute(0, 2, 1)
 
         #raise Exception("STOP >:v")
 
