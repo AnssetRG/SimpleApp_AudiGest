@@ -76,7 +76,7 @@ def render_mesh_helper(mesh, t_center, rot=np.zeros(3), tex_img=None, v_colors=N
 
     if not texture_rendering:
         tri_mesh = trimesh.Trimesh(vertices=mesh_copy.v, faces=mesh_copy.f, vertex_colors=rgb_per_v)
-        render_mesh = pyrender.Mesh.from_trimesh(tri_mesh, smooth=False)
+        render_mesh = pyrender.Mesh.from_trimesh(tri_mesh, smooth=True)
 
     scene = pyrender.Scene(ambient_light=[.2, .2, .2], bg_color=[255, 255, 255])
     camera = pyrender.IntrinsicsCamera(fx=camera_params['f'][0],
