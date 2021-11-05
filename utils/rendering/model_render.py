@@ -70,19 +70,27 @@ class ModelRender:
             reconstructed = reconstructed.squeeze(dim=0)
             reconstructed = reconstructed.cpu().numpy()
 
+            reconstructed = self.scale_face(reconstructed)
+
             center = np.mean(reconstructed[0], axis=0)
 
             #noise = np.random.uniform(-0.001,0.001,reconstructed.shape)
             #reconstructed = reconstructed + noise
 
             for i_frame in range(num_frames):
-                pred_img = render_mesh_helper(Mesh(reconstructed[i_frame], self.template_mesh.f), center)
+                pred_img = render_mesh_helper(Mesh(reconstructed[i_frame], self.template_mesh.f))
                 pred_img = add_image_text(pred_img, 'Prediction')
                 writer.write(pred_img)
             writer.release()
 
-        cmd = (f'ffmpeg -i {audio_path} -i {temp_video_fname} -ac 2 -channel_layout stereo -pix_fmt yuv420p {video_fname}').split()
+        cmd = (f'ffmpeg -i {audio_path} -i {temp_video_fname} -ac 2 -channel_layout stereo {video_fname}').split()
         call(cmd)
     
     def MSE(self, array_1: np.array = None, array_2: np.array = None):
         return (np.square(array_1 - array_2)).mean()
+    
+    def scale_face(self, reconstructed):
+        reconstructed[:,:,0] *= 1.6
+        #reconstructed[:,:,1] *= 0.9
+        reconstructed[:,:,2] *= 1.6
+        return reconstructed

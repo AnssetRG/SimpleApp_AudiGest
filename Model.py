@@ -39,9 +39,9 @@ class AudiGestNet(object):
         Initialize AudiGest net and load weights
         """
         #model = AudiGest(self.config)
-        model = SequenceRegressor(self.config,self.device, feature_type='melspec')
+        model = SequenceRegressor(self.config,self.device, feature_type='mfcc')
         #model.to(self.device)
-        model.load(300)
+        model.load(230)
         return model
 
     def inference(self, audio_path: str ="", face_obj: str = None, face_landmarks: str = None):
@@ -52,7 +52,7 @@ class AudiGestNet(object):
         """
         #melspectrogram, mfccs, base_target = self.process_audio(audio_path=audio_path, landmarks_path=face_landmarks)
 
-        feature, emotion, subject, base_target = self.process_data(audio_path=audio_path,landmarks_path=face_landmarks)
+        feature, emotion, subject, base_target = self.process_data(audio_path=audio_path,landmarks_path=face_landmarks, feature_type="mfcc")
         
         current_date_time = datetime.now()
 
