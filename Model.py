@@ -71,9 +71,6 @@ class AudiGestNet(object):
         subject = F.one_hot(torch.Tensor([randint(0,3)]).type(torch.int64), 4)
         emotion = F.one_hot(torch.Tensor([randint(0,7)]).type(torch.int64), 8)
 
-        print("Subject Shape: ", subject.shape)
-        print("Emotion Shape: ", emotion.shape)
-
         #raise Exception("STOP >:v")
 
         _, mfccs, melspec = self.feature_extractor.get_melspec_and_mfccs(audio_path=audio_path, use_delta=True)

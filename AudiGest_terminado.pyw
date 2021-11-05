@@ -31,29 +31,23 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.Image_val = False
         self.current_answer = None
 
-        #Array que guardará valores referente a cada imagen, por el momento es un array de string
         self.face_obj = []
         for item in os.listdir('Objects'):
             self.face_obj.append(os.path.join('Objects',item))
+        self.face_obj_current_value = None
 
         self.face_landmarks = []
         for item in os.listdir('Landmarks'):
             self.face_landmarks.append(os.path.join('Landmarks',item))
-        #Valor actual que se usará como imagen, cambia conforme se seleccione una nueva imagen
-        self.face_obj_current_value = None
         self.face_landmarks_current_value = None
 
-        #carga imagenes
         self.imagenes()
-        
-        #variable global
+    
         self.bandera_procesar = False
-        #bibliotecas 
+
         parameters["audio"].append("")
         widgets["audio_file"].append(self.ui.caja_texto1)
 
-        #función de botones
-        #a los botones se le está añadiendo la función con 2 parámetros: el valor que guarda la imagen y el botón que está siendo interactuado
         self.ui.radio_btn1.toggled.connect(lambda: (self.set_image_file(self.face_obj[0], self.face_landmarks[0], self.ui.radio_btn1)))
         self.ui.radio_btn2.toggled.connect(lambda: (self.set_image_file(self.face_obj[1], self.face_landmarks[1], self.ui.radio_btn2)))
         self.ui.radio_btn3.toggled.connect(lambda: (self.set_image_file(self.face_obj[2], self.face_landmarks[2], self.ui.radio_btn3)))
@@ -108,7 +102,6 @@ class AudiGest_terminado(QDialog,QMainWindow):
             if audio_length < 6:
                 resultado = temp_split[len(temp_split) - 1]
                 
-                #la bandera se enciende cuando el audio es correcto
                 self.Audio_val = True
                 self.activar_boton_procesar()
                 parameters["audio_path"].append(fname[0])
@@ -129,7 +122,6 @@ class AudiGest_terminado(QDialog,QMainWindow):
             self.activar_boton_procesar()
             self.face_obj_current_value = face_obj
             self.face_landmarks_current_value = landmark
-            #print(self.face_obj_current_value)
     
     def alert_window(self):
         msg = QMessageBox()
@@ -148,9 +140,6 @@ class AudiGest_terminado(QDialog,QMainWindow):
     def inferir_audio(self):
         video_path = self.net.inference(audio_path=parameters["audio_path"][-1], face_obj=self.face_obj_current_value, face_landmarks=self.face_landmarks_current_value)
         show_video(video_path)
-    
-    def show_answer(self):
-        print(self.current_answer)
 
 def main(): 
     app = QApplication(sys.argv)

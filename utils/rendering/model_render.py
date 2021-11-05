@@ -83,7 +83,7 @@ class ModelRender:
                 writer.write(pred_img)
             writer.release()
 
-        cmd = (f'ffmpeg -i {audio_path} -i {temp_video_fname} -ac 2 -channel_layout stereo {video_fname}').split()
+        cmd = (f'ffmpeg -i {audio_path} -i {temp_video_fname} -codec copy -ac 2 -channel_layout stereo {video_fname}').split()
         call(cmd)
     
     def MSE(self, array_1: np.array = None, array_2: np.array = None):

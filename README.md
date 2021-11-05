@@ -1,10 +1,22 @@
 AudiGest Desktop Application for Linux OS
 =========================================
 For instalation use the requirements.txt on a new Virtual Enviroment with Python 3.9.6
-
 ```
 $ pip install -r requirements.txt
 ```
+
+Running and Building the Application
+=============================
+For running the app in developer use the next command while the Virtual Enviroment is active
+```
+$ python AudiGest.pyw
+```
+
+For building the app use the next command while the Virtual Enviroment is active
+```
+$ pyinstaller AudiGest_terminado.spec 
+```
+Make sure to import correctly both Librosa and Pyinstaler modules in wich case you may need to write their folder location from your enviroment in the datas propriety of the spec file
 
 Installing Other Dependencies
 =============================
