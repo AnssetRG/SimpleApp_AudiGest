@@ -1,31 +1,30 @@
 from PyQt5 import QtGui
-from PyQt5.QtWidgets import QApplication, QDialog, QWidget, QPushButton, QHBoxLayout, QVBoxLayout, QLabel, \
-    QSlider, QStyle, QSizePolicy, QFileDialog
-import sys
+from PyQt5.QtWidgets import QDialog, QPushButton, QHBoxLayout, QVBoxLayout, QLabel, \
+    QSlider, QStyle, QSizePolicy
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtGui import QIcon, QPalette
 from PyQt5.QtCore import Qt, QUrl
 import os
  
-class VideoWindow(QDialog):
+class VideoPlayer(QDialog):
     def __init__(self, video_path: str = None):
         super().__init__()
 
         self.setModal(True)
  
         self.setWindowTitle(video_path.split("/")[-1])
-        self.setGeometry(350, 100, 700, 500)
+        self.setGeometry(350, 100, 900, 700)
         self.setWindowIcon(QIcon('player.png'))
  
-        p =self.palette()
-        p.setColor(QPalette.Window, Qt.black)
-        self.setPalette(p)
+        palette = self.palette()
+        palette.setColor(QPalette.Window, Qt.black)
+        self.setPalette(palette)
+
+        self.mediaPlayer = None
+        self.videowidget = None
  
         self.init_ui(video_path)
-
-        self.show()
- 
  
     def init_ui(self, video_path: str = None):
  
@@ -96,16 +95,9 @@ class VideoWindow(QDialog):
         self.mediaPlayer.setPosition(position)
     
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
-        print("Closing")
-        self.mediaPlayer.stop()
+        del self.mediaPlayer, self.videowidget
         return super().closeEvent(a0)
 
 def show_video(video_path: str = os.path.join("Videos","TestVideo.wmv")):
-    player = VideoWindow(os.path.join(os.getcwd(),video_path))
+    player = VideoPlayer(os.path.join(os.getcwd(),video_path))
     player.exec()
-
-
-if __name__ == '__main__':
-  app = QApplication(sys.argv)
-  show_video()
-  sys.exit(app.exec_())
