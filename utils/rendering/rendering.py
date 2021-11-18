@@ -25,7 +25,7 @@ from psbody.mesh import Mesh
 
 def render_mesh_helper(mesh):
     camera_params = {'c': np.array([400, 400]),
-                     'f': np.array([1700, 1700])}
+                     'f': np.array([1500, 1500])}
 
     frustum = {'near': 0.01, 'far': 3.0, 'height': 800, 'width': 800}
     

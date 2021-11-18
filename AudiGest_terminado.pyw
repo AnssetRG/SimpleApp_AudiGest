@@ -31,10 +31,10 @@ class AudiGest_terminado(QDialog,QMainWindow):
         self.Image_val = False
         self.current_answer = None
 
-        self.face_obj = []
-        for item in os.listdir('Objects'):
-            self.face_obj.append(os.path.join('Objects',item))
-        self.face_obj_current_value = None
+        #self.face_obj = []
+        #for item in os.listdir('Objects'):
+            #self.face_obj.append(os.path.join('Objects',item))
+        #self.face_obj_current_value = None
 
         self.face_landmarks = []
         for item in os.listdir('Landmarks'):
@@ -48,9 +48,9 @@ class AudiGest_terminado(QDialog,QMainWindow):
         parameters["audio"].append("")
         widgets["audio_file"].append(self.ui.caja_texto1)
 
-        self.ui.radio_btn1.toggled.connect(lambda: (self.set_image_file(self.face_obj[0], self.face_landmarks[0], self.ui.radio_btn1)))
-        self.ui.radio_btn2.toggled.connect(lambda: (self.set_image_file(self.face_obj[1], self.face_landmarks[1], self.ui.radio_btn2)))
-        self.ui.radio_btn3.toggled.connect(lambda: (self.set_image_file(self.face_obj[2], self.face_landmarks[2], self.ui.radio_btn3)))
+        self.ui.radio_btn1.toggled.connect(lambda: (self.set_image_file(self.face_landmarks[0], self.ui.radio_btn1)))
+        self.ui.radio_btn2.toggled.connect(lambda: (self.set_image_file(self.face_landmarks[1], self.ui.radio_btn2)))
+        self.ui.radio_btn3.toggled.connect(lambda: (self.set_image_file(self.face_landmarks[2], self.ui.radio_btn3)))
         self.ui.btn_cargar.clicked.connect(self.set_new_file)
         self.ui.btn_procesar.clicked.connect(start_load)
         self.ui.btn_procesar.clicked.connect(self.inferir_audio)
@@ -99,7 +99,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
             y, sr = librosa.load(fname[0])
             audio_length = librosa.get_duration(y=y, sr=sr)            
 
-            if audio_length < 6:
+            if audio_length < 10:
                 resultado = temp_split[len(temp_split) - 1]
                 
                 self.Audio_val = True
@@ -116,11 +116,10 @@ class AudiGest_terminado(QDialog,QMainWindow):
         widgets["audio_file"][-1].setText(parameters["audio"][-1])
     
     #Función de cuando es interactuado el botón de las imágenes, solo si se marca entonces se guarda los valores
-    def set_image_file(self, face_obj, landmark, button):
+    def set_image_file(self, landmark, button):
         if button.isChecked():
             self.Image_val = True
             self.activar_boton_procesar()
-            self.face_obj_current_value = face_obj
             self.face_landmarks_current_value = landmark
     
     def alert_window(self):
@@ -138,7 +137,7 @@ class AudiGest_terminado(QDialog,QMainWindow):
     
     #Función de la aplicación que llama la inferencia de la red
     def inferir_audio(self):
-        video_path = self.net.inference(audio_path=parameters["audio_path"][-1], face_obj=self.face_obj_current_value, face_landmarks=self.face_landmarks_current_value)
+        video_path = self.net.inference(audio_path=parameters["audio_path"][-1], face_landmarks=self.face_landmarks_current_value)
         show_video(video_path)
 
 def main(): 
