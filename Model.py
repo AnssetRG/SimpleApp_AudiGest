@@ -33,7 +33,7 @@ class AudiGestNet(object):
         Initialize AudiGest net and load weights
         """
         model = SequenceRegressor(self.config,self.device)
-        model.load(300)
+        model.load(600)
         return model
 
     def inference(self, audio_path: str ="", face_landmarks: str = None):

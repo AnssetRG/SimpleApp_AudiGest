@@ -74,9 +74,7 @@ class ModelRender:
 
         cmd = (f'ffmpeg -i {self.audio_path} -i {temp_video_fname} -codec copy -ac 2 -channel_layout stereo {video_fname}').split()
         call(cmd)
-        #mp4_name = f'{video_fname.split(".")[0]}.mp4'
-        #cmd = (f'ffmpeg -i {video_fname} -c:v libx264 -crf 23 -c:a aac -q:a 100 {mp4_name}').split()
-        #call(cmd)
+
         self.set_up()
         if os.path.exists(temp_video_fname):
             os.remove(temp_video_fname)
