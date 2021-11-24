@@ -49,7 +49,7 @@ class AudiGestNet(object):
 
         audio_name = audio_path.split("/")[-1].split(".")[0]
         video_fname = os.path.join("Videos", f'{audio_name}_{current_date_time.date()}_{current_date_time.hour}_{current_date_time.minute}_{current_date_time.second}')
-        video_fname = os.path.join("Videos",audio_name)
+        #video_fname = os.path.join("Videos",audio_name)
         self.renderer.set_up(self.device,feature,emotion,subject,audio_path,"Videos",video_fname)
 
         self.renderer.render_sequences(self.model, base_target)
